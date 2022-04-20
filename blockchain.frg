@@ -121,11 +121,15 @@ sig BadMiner {
 // Input is valid if all coins in Input.coins are present in Minted and not spent
 pred validInput[input: Input] {
     // TODO
+    input.coins in Minted.coins
+    all coin: input.coins | coin.spent = 0 
 }
 
 // Output is valid if all coins in Output.coins are present in Minted and not spent
 pred validOutput[output: Output] {
     // TODO
+    out.coins in Minted.coins
+    all coin: output.coins | coin.spent = 0
 }
 
 // good transactions are ones where 
@@ -135,6 +139,11 @@ pred validOutput[output: Output] {
 // - no other transaction on that block has the same inputs and/or outputs
 pred goodTransaction[tx: Transaction, block: Block] {
     // TODO
+    all otherTx: Transaction | tx.id = otherTx <=> tx = otherTx
+    all input: tx.inputs | validInput[input]
+    all output: tx.outputs | validOutput[output]
+    all otherTx: block.transactions | otherTx != tx => (tx.inputs != otherTx.inputs and tx.outputs != otherTx.outputs)
+
 }
 
 // if any of the above condiitons are violated, then it is a bad transaction
