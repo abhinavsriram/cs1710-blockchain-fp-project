@@ -48,7 +48,7 @@ sig Header {
     version: one Int,
     time: one TIME,
     nonce: one NONCE,
-    blocksize: one Int
+    blocksize: one Int,
     prevBlockHash: one HASH,
     merkleRootHash: one HASH
 }
@@ -108,6 +108,7 @@ sig Miners {
     allMiners: set Miner
 }
 
+// active field? in order to change number of miners dynamically
 abstract sig Miner {}
 // a good miner's network is a GoodP2PNetwork
 sig GoodMiner {
@@ -143,7 +144,6 @@ pred goodTransaction[tx: Transaction, block: Block] {
     all input: tx.inputs | validInput[input]
     all output: tx.outputs | validOutput[output]
     all otherTx: block.transactions | otherTx != tx => (tx.inputs != otherTx.inputs and tx.outputs != otherTx.outputs)
-
 }
 
 // if any of the above condiitons are violated, then it is a bad transaction
