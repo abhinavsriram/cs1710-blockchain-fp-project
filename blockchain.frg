@@ -1,4 +1,4 @@
-#lang forge "final"
+#lang forge
 
 // a blockchain can be represented by the last block in the chain and 
 // a set of all blocks in the chain; we can access the entire chain by 
@@ -19,11 +19,14 @@ one sig BlockChain {
 //               - set of all Transaction(s) in the Block
 // votes: Int;
 //        - counter for the number of votes the block gets for consensus
+// approved: Int;
+//           - 0 if not approved by consensus, 1 if approved by consensus
 sig Block {
     hash: one HASH,
     header: one Header,
-    transactions: set Transaction,
-    votes: one Int
+    blockTxs: set Transaction,
+    votes: one Int,
+    approved: one Int
 }
 
 // each header contains the following fields
@@ -69,30 +72,30 @@ one sig Minted {
 // each coin is either spent or unspent
 // spent is set to 1 if spent, 0 if unspent
 sig Coin {
-    id: one HASH,
+    coinID: one HASH,
     spent: one Int 
 }
 
 // each transaction has a unique ID given by a unique HASH
 // it also has a set of inputs and outputs
 sig Transaction {
-    id: one HASH,
+    txID: one HASH,
     inputs: set Input,
     outputs: set Output
 }
 // sig to represent inputs to a transaction
 sig Input {
-    coins: set Coin
+    inputCoins: set Coin
 }
 // sig to represent outputs from a transaction
 sig Output {
-    coins: set Coin
+    outputCoins: set Coin
 }
 
 // abstract sig representing a peer to peer network
 // the peer to peer network simply consists of a set of transactions
 abstract sig P2PNetwork {
-    transactions: set Transaction
+    networkTxs: set Transaction
 }
 // there is only one legitimate network
 // GoodP2PNetwork.transactions consists of only good transactions 
@@ -104,7 +107,7 @@ one sig GoodP2PNetwork extends P2PNetwork {}
 sig BadP2PNetwork extends P2PNetwork {}
 
 // set of all miners
-sig Miners {
+one sig Miners {
     allMiners: set Miner
 }
 
@@ -112,25 +115,25 @@ sig Miners {
 abstract sig Miner {}
 // a good miner's network is a GoodP2PNetwork
 sig GoodMiner {
-    network: one GoodP2PNetwork
+    goodNetwork: one GoodP2PNetwork
 }
 // a bad miner's network is a BadP2PNetwork
 sig BadMiner {
-    network: one BadP2PNetwork
+    badNetwork: one BadP2PNetwork
 }
 
 // Input is valid if all coins in Input.coins are present in Minted and not spent
 pred validInput[input: Input] {
     // TODO
-    input.coins in Minted.coins
-    all coin: input.coins | coin.spent = 0 
+    input.inputCoins in Minted.coins
+    all coin: input.inputCoinsSet | coin.spent = 0 
 }
 
 // Output is valid if all coins in Output.coins are present in Minted and not spent
 pred validOutput[output: Output] {
     // TODO
-    out.coins in Minted.coins
-    all coin: output.coins | coin.spent = 0
+    out.outputCoins in Minted.coins
+    all coin: output.outputCoins | coin.spent = 0
 }
 
 // good transactions are ones where 
@@ -140,10 +143,10 @@ pred validOutput[output: Output] {
 // - no other transaction on that block has the same inputs and/or outputs
 pred goodTransaction[tx: Transaction, block: Block] {
     // TODO
-    all otherTx: Transaction | tx.id = otherTx <=> tx = otherTx
+    all otherTx: Transaction | tx.txID = otherTx <=> tx = otherTx
     all input: tx.inputs | validInput[input]
     all output: tx.outputs | validOutput[output]
-    all otherTx: block.transactions | otherTx != tx => (tx.inputs != otherTx.inputs and tx.outputs != otherTx.outputs)
+    all otherTx: block.blockTxs | otherTx != tx => (tx.inputs != otherTx.inputs and tx.outputs != otherTx.outputs)
 }
 
 // if any of the above condiitons are violated, then it is a bad transaction
@@ -152,16 +155,20 @@ pred badTransaction[tx: Transaction, block: Block] {
 }
 
 // a block is added to the chain IFF a majority of miners approve the block
-// a miner approves the block when Block.transactions == Miner.network.transactions
+// a miner approves the block when Block.transactions in Miner.network.transactions
 // increment Block.votes if a miner approves the block
 // block is approved when Block.votes > Miners.allMiners.len/2 + 1
-pred consensus {
-    // TODO
+pred consensus[block: Block] {
+    #{m: Miner | m in Miners.allMiners and block.blockTxs in m.network.networkTxs} >= add[divide[#{m: miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
 }
 
 // simulating a 51% attack using majority bad miners that all use the same BadP2PNetwork
 pred majorityAttack {
     // TODO
+}
+
+run {
+    consensus
 }
 
 
