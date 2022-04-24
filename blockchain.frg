@@ -6,8 +6,8 @@
 // hash of the previous block, and we can continue to iterate backward 
 // as needed
 one sig BlockChain {
-    lastBlock: one Block,
-    allBlocks: set Block
+    lastBlock: one FBlock,
+    allBlocks: set FBlock
 }
 
 // each block contains the following fields
@@ -21,7 +21,7 @@ one sig BlockChain {
 //        - counter for the number of votes the block gets for consensus
 // approved: Int;
 //           - 0 if not approved by consensus, 1 if approved by consensus
-sig Block {
+sig FBlock {
     hash: one HASH,
     header: one Header,
     blockTxs: set Transaction,
@@ -112,27 +112,29 @@ one sig Miners {
 }
 
 // active field? in order to change number of miners dynamically
-abstract sig Miner {}
+abstract sig Miner {
+    network: one P2PNetwork
+}
 // a good miner's network is a GoodP2PNetwork
 sig GoodMiner {
-    goodNetwork: one GoodP2PNetwork
+    // goodNetwork: one GoodP2PNetwork
 }
 // a bad miner's network is a BadP2PNetwork
 sig BadMiner {
-    badNetwork: one BadP2PNetwork
+    // badNetwork: one BadP2PNetwork
 }
 
 // Input is valid if all coins in Input.coins are present in Minted and not spent
 pred validInput[input: Input] {
     // TODO
     input.inputCoins in Minted.coins
-    all coin: input.inputCoinsSet | coin.spent = 0 
+    all coin: input.inputCoins | coin.spent = 0 
 }
 
 // Output is valid if all coins in Output.coins are present in Minted and not spent
 pred validOutput[output: Output] {
     // TODO
-    out.outputCoins in Minted.coins
+    output.outputCoins in Minted.coins
     all coin: output.outputCoins | coin.spent = 0
 }
 
@@ -141,7 +143,7 @@ pred validOutput[output: Output] {
 // - Transaction.inputs is valid
 // - Transaction.outputs is valid
 // - no other transaction on that block has the same inputs and/or outputs
-pred goodTransaction[tx: Transaction, block: Block] {
+pred goodTransaction[tx: Transaction, block: FBlock] {
     // TODO
     all otherTx: Transaction | tx.txID = otherTx <=> tx = otherTx
     all input: tx.inputs | validInput[input]
@@ -150,7 +152,7 @@ pred goodTransaction[tx: Transaction, block: Block] {
 }
 
 // if any of the above condiitons are violated, then it is a bad transaction
-pred badTransaction[tx: Transaction, block: Block] {
+pred badTransaction[tx: Transaction, block: FBlock] {
     not goodTransaction[tx, block]
 }
 
@@ -158,8 +160,8 @@ pred badTransaction[tx: Transaction, block: Block] {
 // a miner approves the block when Block.transactions in Miner.network.transactions
 // increment Block.votes if a miner approves the block
 // block is approved when Block.votes > Miners.allMiners.len/2 + 1
-pred consensus[block: Block] {
-    #{m: Miner | m in Miners.allMiners and block.blockTxs in m.network.networkTxs} >= add[divide[#{m: miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
+pred consensus[block: FBlock] {
+    // #{m: Miner | m in Miners.allMiners and block.blockTxs in m.network.networkTxs} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
 }
 
 // simulating a 51% attack using majority bad miners that all use the same BadP2PNetwork
