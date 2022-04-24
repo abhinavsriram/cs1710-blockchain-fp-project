@@ -161,7 +161,7 @@ pred badTransaction[tx: Transaction, block: FBlock] {
 // increment Block.votes if a miner approves the block
 // block is approved when Block.votes > Miners.allMiners.len/2 + 1
 pred consensus[block: FBlock] {
-    // #{m: Miner | m in Miners.allMiners and block.blockTxs in m.network.networkTxs} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
+    #{m: Miner | m in Miners.allMiners and block.blockTxs in m.network.networkTxs} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
 }
 
 // simulating a 51% attack using majority bad miners that all use the same BadP2PNetwork
