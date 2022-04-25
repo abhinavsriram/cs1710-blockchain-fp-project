@@ -116,11 +116,11 @@ abstract sig Miner {
     network: one P2PNetwork
 }
 // a good miner's network is a GoodP2PNetwork
-sig GoodMiner {
+sig GoodMiner extends Miner{
     // goodNetwork: one GoodP2PNetwork
 }
 // a bad miner's network is a BadP2PNetwork
-sig BadMiner {
+sig BadMiner extends Miner{
     // badNetwork: one BadP2PNetwork
 }
 
@@ -161,7 +161,7 @@ pred badTransaction[tx: Transaction, block: FBlock] {
 // increment Block.votes if a miner approves the block
 // block is approved when Block.votes > Miners.allMiners.len/2 + 1
 pred consensus[block: FBlock] {
-    // #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
+    #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
 }
 
 pred runConsensus {
@@ -174,9 +174,16 @@ pred runConsensus {
 pred majorityAttack {
     // TODO
 }
+pred wellformed {
+
+}
+
+pred transition {
+    
+}
 
 run {
     runConsensus
-} for exactly 5 FBlock
+} for exactly 1 FBlock, 5 Miner, 5 Input, 5 Output, 1 GoodP2PNetwork
 
 
