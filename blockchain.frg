@@ -118,10 +118,12 @@ abstract sig Miner {
 // a good miner's network is a GoodP2PNetwork
 sig GoodMiner extends Miner{
     // goodNetwork: one GoodP2PNetwork
+    // votedFor: set TIME -> Transaction
 }
 // a bad miner's network is a BadP2PNetwork
 sig BadMiner extends Miner{
     // badNetwork: one BadP2PNetwork
+    // votedFor: set TIME -> Transaction 
 }
 
 // Input is valid if all coins in Input.coins are present in Minted and not spent
@@ -172,7 +174,9 @@ pred runConsensus {
 
 // simulating a 51% attack using majority bad miners that all use the same BadP2PNetwork
 pred majorityAttack {
-    // TODO
+    
+    
+    
 }
 pred wellformed {
 
