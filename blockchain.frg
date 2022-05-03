@@ -1,13 +1,11 @@
 #lang forge
 
-// hashBock: pfunc FBlock -> HASH
-
 // a blockchain can be represented by the last block in the chain and 
 // a set of all blocks in the chain; we can access the entire chain by 
 // using BlockChain.lastBlock.header.prevBlockHash which gives us the 
 // hash of the previous block, and we can continue to iterate backward 
 // as needed
-// The blockchain is the state
+// the blockchain sig represents state in our traces
 sig BlockChain {
     lastBlock: one FBlock,
     allBlocks: set FBlock
@@ -67,8 +65,7 @@ sig TIME {
 // represents a nonce for a block
 sig NONCE {}
 // represents 256-bit hashes
-sig HASH {
-}
+sig HASH {}
 
 // set of all minted/mined coins i.e., set of all coins in our universe
 one sig Minted {
@@ -118,7 +115,7 @@ one sig Miners {
     allMiners: set Miner
 }
 
-// active field? in order to change number of miners dynamically
+// do we want an active field? in order to change number of miners dynamically?
 abstract sig Miner {
     network: one P2PNetwork
 }
@@ -131,14 +128,14 @@ sig BadMiner extends Miner{
     // badNetwork: one BadP2PNetwork
 }
 
-// Input is valid if all coins in Input.coins are present in Minted and not spent
+// Input is valid if all coins in Input.inputCoins are present in Minted and not spent
 pred validInput[input: Input] {
     // TODO
     input.inputCoins in Minted.coins
     all coin: input.inputCoins | coin.spent = 0 
 }
 
-// Output is valid if all coins in Output.coins are present in Minted and not spent
+// Output is valid if all coins in Output.outputCoins are present in Minted and not spent
 pred validOutput[output: Output] {
     // TODO
     output.outputCoins in Minted.coins
@@ -151,7 +148,6 @@ pred validOutput[output: Output] {
 // - Transaction.outputs is valid
 // - no other transaction on that block has the same inputs and/or outputs
 pred goodTransaction[tx: Transaction, block: FBlock] {
-    // TODO
     all otherTx: Transaction | tx.txID = otherTx <=> tx = otherTx
     all input: tx.inputs | validInput[input]
     all output: tx.outputs | validOutput[output]
@@ -182,7 +178,9 @@ pred majorityAttack {
     // TODO
 }
 
-// Checks if a block is in a blockchain (includes being in allBlocks)
+// checks if a block is in a blockchain 
+// i.e., it points to another block and another block points to it
+// also checks that the block is in BlockChain.allBlocks
 pred blockInChain[b: FBlock, bc: BlockChain] {
     bc.lastBlock != b => {
         some next: FBlock {
@@ -194,14 +192,14 @@ pred blockInChain[b: FBlock, bc: BlockChain] {
 }
 
 pred wellformed {
-    // Blocks can only have the same hash if they are the same block
+    // blocks can only have the same hash if they are the same block
     all b1, b2: FBlock {
         b1.hash = b2.hash => b1 = b2
     }
 
-    // BlockChain is linear
+    // the blockChain is linear
     all bc: BlockChain {
-        // No cycle 
+        // no cycles
         some root: FBlock {
             no root.header.prevBlockHash
             blockInChain[root, bc]
@@ -209,18 +207,17 @@ pred wellformed {
     }
 
     all b: FBlock, bc:BlockChain {
-        // Block is in allBlocks iff it is in the chain
+        // block is in allBlocks iff it is in the chain
         b in bc.allBlocks iff blockInChain[b, bc]
     }
 
-    // Block is in chain iff it reached consensus
+    // block is in chain iff it reached consensus
     runConsensus
 
-    // Time is linear
+    // time is linear
     some last: TIME {
         no last.next
     }
-
     some first: TIME {
         all other: TIME {
             reachable[other, first, next] or other = first
@@ -228,22 +225,23 @@ pred wellformed {
     }
 }
 
--- A normal step appending to current chain (no fork)
+// a normal step appending to current chain (no fork)
 pred step [b1, b2: BlockChain] {
-    // The old lastBlock becomes the previous block of the new lastBlock
+    // the old lastBlock becomes the previous block of the new lastBlock
     b2.lastBlock.header.prevBlockHash = b1.lastBlock.hash
 }
 
+// generates traces
 pred traces {
     all t1, t2: TIME {
         t1.next = t2 => step[t1.blockchain, t2.blockchain]
     }
 }
 
--- Forces all blocks to be in a BlockChain
+// forces all blocks to be in a chain
 pred allBlocksInAChain {
     all b: FBlock {
-        some bc:BlockChain {
+        some bc: BlockChain {
             blockInChain[b, bc]
         }
     }
