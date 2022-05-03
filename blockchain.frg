@@ -8,7 +8,7 @@
 // hash of the previous block, and we can continue to iterate backward 
 // as needed
 // The blockchain is the state
-one sig BlockChain {
+sig BlockChain {
     lastBlock: one FBlock,
     allBlocks: set FBlock
 }
@@ -217,15 +217,13 @@ pred wellformed {
     runConsensus
 
     // Time is linear
-    all t: TIME {
-        some last: TIME {
-            no last.next
-        }
+    some last: TIME {
+        no last.next
+    }
 
-        some first: TIME {
-            all other: TIME {
-                reachable[other, first, next] or other = first
-            }
+    some first: TIME {
+        all other: TIME {
+            reachable[other, first, next] or other = first
         }
     }
 }
@@ -256,6 +254,6 @@ run {
     traces
     -- Force all blocks to be in a BlockChain
     allBlocksInAChain
-} //for exactly 4 FBlock, 3 TIME, 3 BlockChain, 4 HASH
+} for exactly 3 TIME
 
 
