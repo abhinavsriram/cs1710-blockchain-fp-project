@@ -226,17 +226,84 @@ function createMiners() {
     return minerContainer
 }
 
+function makeTxNameDiv(txName) {
+    newTxNameDiv = document.createElement("div")
+    newTxNameDiv.style['font-size'] = "8px"
+    newTxNameDiv.innerHTML = "Transaction Name: " + txName
+    return newTxNameDiv
+}
+
+function makeTxIDDiv(txID) {
+    newTxIDDiv = document.createElement("div")
+    newTxIDDiv.style['font-size'] = "8px"
+    newTxIDDiv.innerHTML = "Transaction ID: " + txID
+    return newTxIDDiv
+}
+
+function makeTxInputs(tx) {
+    newTxInputDiv = document.createElement("div")
+    newTxInputDiv.style['font-size'] = "8px"
+    for (const ind in tx.join(inputs).tuples()) {
+        const input = tx.join(inputs).tuples()[ind]
+        var formattedInputString = input.toString()
+        for (const ind2 in input.join(inputCoins).tuples()) {
+            const coin = input.join(inputCoins).tuples()[ind2]
+            if (formattedInputString == input.toString()) {
+                formattedInputString += "(" + coin.toString()
+            } else {
+                formattedInputString += ", " + coin.toString()
+            }
+        }
+        formattedInputString += ")"
+        if (newTxInputDiv.innerHTML == "") {
+            newTxInputDiv.innerHTML = "Inputs: " + formattedInputString
+        } else {
+            newTxInputDiv.innerHTML += formattedInputString
+        }
+    }
+    return newTxInputDiv
+}
+
+function makeTxOutputs(tx) {
+    newTxOutputDiv = document.createElement("div")
+    newTxOutputDiv.style['font-size'] = "8px"
+    for (const ind in tx.join(outputs).tuples()) {
+        const input = tx.join(outputs).tuples()[ind]
+        var formattedOutputString = input.toString()
+        for (const ind2 in input.join(outputCoins).tuples()) {
+            const coin = input.join(outputCoins).tuples()[ind2]
+            if (formattedOutputString == input.toString()) {
+                formattedOutputString += "(" + coin.toString()
+            } else {
+                formattedOutputString += ", " + coin.toString()
+            }
+        }
+        formattedOutputString += ")"
+        if (newTxOutputDiv.innerHTML == "") {
+            newTxOutputDiv.innerHTML = "Outputs: " + formattedOutputString
+        } else {
+            newTxOutputDiv.innerHTML += formattedOutputString
+        }
+    }
+    return newTxOutputDiv
+}
+
 function makeTransaction(tx) {
     newTxDiv = document.createElement("div")
-    newTxDiv.style.width = "130px"
-    newTxDiv.style.height = "20px"
+    newTxDiv.style.width = "auto"
+    newTxDiv.style.height = "auto"
     newTxDiv.style.border = "thin solid black"
     newTxDiv.style.display = "flex"
     newTxDiv.style.margin = "5px"
     newTxDiv.style.padding = "3px"
     newTxDiv.style['flex-direction'] = "column"
     newTxDiv.style['font-size'] = "8px"
-    newTxDiv.append(tx)
+
+    newTxDiv.append(makeTxNameDiv(tx.toString()))
+    newTxDiv.append(makeTxIDDiv(tx.join(txID)))
+    newTxDiv.append(makeTxInputs(tx))
+    newTxDiv.append(makeTxOutputs(tx))
+
     return newTxDiv
 }
 
