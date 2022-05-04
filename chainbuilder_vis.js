@@ -1,7 +1,7 @@
 function makeBlockDiv(fblock) {
     var block = document.createElement("div")
     block.style.width = "150px"
-    block.style.height = "380px"
+    block.style.height = "445px"
     block.style.border = "thin solid black"
     block.style.display = "flex"
     block.style.margin = "5px"
@@ -64,10 +64,24 @@ function makeHeaderDiv(blockHeader) {
     return header
 }
 
+function makeApprovalDiv(blockApproved, blockVotes) {
+    var approval = document.createElement("div")
+    approval.style.width = "130px"
+    approval.style.height = "20px"
+    approval.style.border = "thin solid black"
+    approval.style.display = "flex"
+    approval.style.margin = "5px"
+    approval.style.padding = "3px"
+    approval.style['flex-direction'] = "column"
+    approval.style['font-size'] = "8px"
+    approval.append("Approved, Votes: " + blockApproved + ", " + blockVotes + "\n")
+    return approval
+}
+
 function makeTransactionsDiv(blockTransactions) {
     var txs = document.createElement("div")
     txs.style.width = "130px"
-    txs.style.height = "185px"
+    txs.style.height = "215px"
     txs.style.border = "thin solid black"
     txs.style.display = "flex"
     txs.style.margin = "5px"
@@ -120,6 +134,13 @@ function makeBlock(block) {
 
     headerDiv = makeHeaderDiv(blockHeader)
     blockDiv.append(headerDiv)
+    
+    var blockApprovedFormatted = "No"
+    if (blockApproved == 1) {
+        blockApprovedFormatted = "Yes"
+    }
+    approvalDiv = makeApprovalDiv(blockApprovedFormatted, blockVotes)
+    blockDiv.append(approvalDiv)
 
     txsDiv = makeTransactionsDiv(blockTransactions)
     blockDiv.append(txsDiv)
@@ -133,7 +154,7 @@ function makeBlock(block) {
 function createBlockChain(state) {
     blockChainContainer = document.createElement("div")
     blockChainContainer.style.width = "100%"
-    blockChainContainer.style.height = "400px"
+    blockChainContainer.style.height = "450px"
     blockChainContainer.style.margin = "5px"
     blockChainContainer.style.display = "flex"
     blockChainContainer.style['flex-direction'] = "column"
