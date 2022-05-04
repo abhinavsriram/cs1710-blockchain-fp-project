@@ -205,6 +205,54 @@ function makeMiner(miner) {
     return newMiner
 }
 
+// function createGoodMiners() {
+//     minerContainer = document.createElement("div")
+//     minerContainer.innerHTML = "Good Miners"
+//     minerContainer.style.border = "thin solid black"
+//     minerContainer.style.height = "100px"
+//     minerContainer.style.margin = "5px"
+//     minerContainer.style.padding = "5px"
+//     minerContainer.style.display = "flex"
+//     minerContainer.style['flex-direction'] = "column"
+
+//     minerDiv = document.createElement("div")
+//     minerContainer.append(minerDiv)
+//     minerDiv.style.display = "flex"
+//     minerDiv.style['flex-direction'] = "row"
+//     minerDiv.style['flex-wrap'] = "wrap"
+
+//     for (const ind in GoodMiner.tuples()) {
+//         const miner = GoodMiner.tuples()[ind]
+//         minerDiv.append(makeMiner(miner))
+//     }
+
+//     return minerContainer
+// }
+
+// function createBadMiners() {
+//     minerContainer = document.createElement("div")
+//     minerContainer.innerHTML = "Bad Miners"
+//     minerContainer.style.border = "thin solid black"
+//     minerContainer.style.height = "100px"
+//     minerContainer.style.margin = "5px"
+//     minerContainer.style.padding = "5px"
+//     minerContainer.style.display = "flex"
+//     minerContainer.style['flex-direction'] = "column"
+
+//     minerDiv = document.createElement("div")
+//     minerContainer.append(minerDiv)
+//     minerDiv.style.display = "flex"
+//     minerDiv.style['flex-direction'] = "row"
+//     minerDiv.style['flex-wrap'] = "wrap"
+
+//     for (const ind in BadMiner.tuples()) {
+//         const miner = BadMiner.tuples()[ind]
+//         minerDiv.append(makeMiner(miner))
+//     }
+
+//     return minerContainer
+// }
+
 function makeTxNameDiv(txName) {
     newTxNameDiv = document.createElement("div")
     newTxNameDiv.style['font-size'] = "8px"
@@ -385,11 +433,14 @@ function createStateDiv(state) {
     innerDiv.style['flex-direction'] = "row"
     innerDiv.style['flex-wrap'] = "wrap"
     innerDiv.append(createBlockChain(state))
+    // innerDiv.append(createGoodMiners())
+    // innerDiv.append(createBadMiners())
     innerDiv.append(createGoodP2PNetwork())
     for (const ind in BadP2PNetwork.tuples()) {
         const badP2PNetwork = BadP2PNetwork.tuples()[ind]
         innerDiv.append(createBadP2PNetwork(badP2PNetwork))
     }
+
     outerDiv.append(innerDiv)
     return outerDiv
 }
