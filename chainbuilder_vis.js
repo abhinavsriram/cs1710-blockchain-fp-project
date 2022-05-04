@@ -74,7 +74,11 @@ function makeApprovalDiv(blockApproved, blockVotes) {
     approval.style.padding = "3px"
     approval.style['flex-direction'] = "column"
     approval.style['font-size'] = "8px"
-    approval.append(blockApproved + " Approved With " + blockVotes + " of " + Miners.join(allMiners).tuples().length + " Votes")
+    var blockApprovedFormatted = "Not"
+    if (blockApproved == 1) {
+        blockApprovedFormatted = ""
+    }
+    approval.append(blockApprovedFormatted + " Approved With " + blockVotes + " of " + Miners.join(allMiners).tuples().length + " Votes")
     return approval
 }
 
@@ -135,11 +139,7 @@ function makeBlock(block) {
     headerDiv = makeHeaderDiv(blockHeader)
     blockDiv.append(headerDiv)
     
-    var blockApprovedFormatted = "Not"
-    if (blockApproved == 1) {
-        blockApprovedFormatted = ""
-    }
-    approvalDiv = makeApprovalDiv(blockApprovedFormatted, blockVotes)
+    approvalDiv = makeApprovalDiv(blockApproved, blockVotes)
     blockDiv.append(approvalDiv)
 
     txsDiv = makeTransactionsDiv(blockTransactions)
@@ -153,11 +153,13 @@ function makeBlock(block) {
 
 function createBlockChain(state) {
     blockChainContainer = document.createElement("div")
+    blockChainContainer.innerHTML = "Blocks"
     blockChainContainer.style.width = "100%"
     blockChainContainer.style.height = "450px"
     blockChainContainer.style.margin = "5px"
     blockChainContainer.style.display = "flex"
     blockChainContainer.style['flex-direction'] = "column"
+    blockChainContainer.style['margin-bottom'] = "30px"
 
     blockChainDiv = document.createElement("div")
     blockChainContainer.append(blockChainDiv)
@@ -169,13 +171,94 @@ function createBlockChain(state) {
         const block = state.join(blockchain).join(allBlocks).tuples()[ind]
         blockChainDiv.append(makeBlock(block))
     }
+    
     return blockChainContainer
+}
+
+function makeMiner(miner) {
+    newMiner = document.createElement("div")
+    newMiner.style.width = "40px"
+    newMiner.style.height = "58px"
+    newMiner.style.display = "flex"
+    newMiner.style.margin = "10px"
+    newMiner.style['flex-direction'] = "column"
+    newMiner.style['font-size'] = "8px"
+    newMiner.style['align-items'] = "center"
+    newMiner.style['justify-content'] = "center"
+
+    const minerHatImageURL = "https://thumbs.dreamstime.com/b/mining-helmet-lamp-vector-illustration-6109854.jpg"
+    const minerHatImage = document.createElement("img")
+    minerHatImage.src = minerHatImageURL
+    minerHatImage.style.width = '100%'
+    minerHatImage.style.height = '80%'
+    minerHatImage.style['margin-top'] = "2px"
+    minerHatImage.style['margin-bottom'] = "2px"
+    minerHatImage.style.padding = "2px"
+    newMiner.append(minerHatImage)
+
+    const minerNameDiv = document.createElement("div")
+    minerNameDiv.style.margin = "5px"
+    minerNameDiv.innerHTML = "Miner " + miner.toString()[miner.toString().length - 1]
+    newMiner.append(minerNameDiv)
+    
+    return newMiner
+}
+
+function createMiners() {
+    minerContainer = document.createElement("div")
+    minerContainer.innerHTML = "Miners"
+    minerContainer.style.height = "100px"
+    minerContainer.style.margin = "5px"
+    minerContainer.style.display = "flex"
+    minerContainer.style['flex-direction'] = "column"
+
+    minerDiv = document.createElement("div")
+    minerContainer.append(minerDiv)
+    minerDiv.style.display = "flex"
+    minerDiv.style['flex-direction'] = "row"
+    minerDiv.style['flex-wrap'] = "wrap"
+
+    for (const ind in Miners.join(allMiners).tuples()) {
+        const miner = Miners.join(allMiners).tuples()[ind]
+        minerDiv.append(makeMiner(miner))
+    }
+
+    return minerContainer
+}
+
+function makeTransaction(tx) {
+    newTxDiv = document.createElement("div")
+    newTxDiv.style.width = "130px"
+    newTxDiv.style.height = "20px"
+    newTxDiv.style.border = "thin solid black"
+    newTxDiv.style.display = "flex"
+    newTxDiv.style.margin = "5px"
+    newTxDiv.style.padding = "3px"
+    newTxDiv.style['flex-direction'] = "column"
+    newTxDiv.style['font-size'] = "8px"
+    newTxDiv.append(tx)
+    return newTxDiv
+}
+
+function createTransactions() {
+    transactionContainer = document.createElement("div")
+    transactionContainer.innerHTML = "Transactions"
+    transactionContainer.style.height = "100px"
+    transactionContainer.style.margin = "5px"
+    transactionContainer.style.display = "flex"
+    transactionContainer.style['flex-direction'] = "column"
+
+    for (const ind in GoodP2PNetwork.join(networkTxs).tuples()) {
+        tx = GoodP2PNetwork.join(networkTxs).tuples()[ind]
+        transactionContainer.append(makeTransaction(tx))
+    }
+
+    return transactionContainer
 }
 
 function createStateDiv(state) {
     outerDiv = document.createElement("div")
     outerDiv.innerHTML = "<h1> " + "Blockchain State at Timestep " + state.toString()[state.toString().length - 1] + "</h1>"
-    outerDiv.style.display = "flex"
     outerDiv.style.display = "flex"
     outerDiv.style['flex-direction'] = "column"
     outerDiv.style.margin = "20px 5px"
@@ -187,6 +270,8 @@ function createStateDiv(state) {
     innerDiv.style['flex-direction'] = "row"
     innerDiv.style['flex-wrap'] = "wrap"
     innerDiv.append(createBlockChain(state))
+    innerDiv.append(createMiners())
+    innerDiv.append(createTransactions())
     outerDiv.append(innerDiv)
     return outerDiv
 }
@@ -195,7 +280,7 @@ function createStates() {
     scrollableStates = document.createElement("div")
     scrollableStates.style.overflow = "scroll"
     scrollableStates.style.width = "100%"
-    scrollableStates.style.height = "1500px"
+    scrollableStates.style.height = "100%"
     scrollableStates.style.margin = "5px"
     for (const ind in TIME.tuples()) {
         const state = TIME.tuples()[ind]

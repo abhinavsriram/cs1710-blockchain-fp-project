@@ -120,11 +120,11 @@ abstract sig Miner {
     network: one P2PNetwork
 }
 // a good miner's network is a GoodP2PNetwork
-sig GoodMiner extends Miner{
+sig GoodMiner extends Miner {
     // goodNetwork: one GoodP2PNetwork
 }
 // a bad miner's network is a BadP2PNetwork
-sig BadMiner extends Miner{
+sig BadMiner extends Miner {
     // badNetwork: one BadP2PNetwork
 }
 

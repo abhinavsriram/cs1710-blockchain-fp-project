@@ -90,4 +90,4 @@ run {
     wellformedChain
     allBlocksInAChain
     traces
-} for exactly 3 TIME
+} for exactly 3 TIME, 5 GoodMiner
