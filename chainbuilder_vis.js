@@ -178,8 +178,9 @@ function createBlockChain(state) {
 
 function makeMiner(miner) {
     newMiner = document.createElement("div")
-    newMiner.style.width = "40px"
-    newMiner.style.height = "58px"
+    newMiner.style.border = "thin solid black"
+    newMiner.style.width = "55px"
+    newMiner.style.height = "65px"
     newMiner.style.display = "flex"
     newMiner.style.margin = "10px"
     newMiner.style['flex-direction'] = "column"
@@ -190,7 +191,7 @@ function makeMiner(miner) {
     const minerHatImageURL = "https://thumbs.dreamstime.com/b/mining-helmet-lamp-vector-illustration-6109854.jpg"
     const minerHatImage = document.createElement("img")
     minerHatImage.src = minerHatImageURL
-    minerHatImage.style.width = '100%'
+    minerHatImage.style.width = '90%'
     minerHatImage.style.height = '80%'
     minerHatImage.style['margin-top'] = "2px"
     minerHatImage.style['margin-bottom'] = "2px"
@@ -419,6 +420,67 @@ function createBadP2PNetwork(badNetwork) {
     return badP2PNetworkContainer
 }
 
+function makeCoin(coin) {
+    newCoin = document.createElement("div")
+    newCoin.style.border = "thin solid black"
+    newCoin.style.width = "80px"
+    newCoin.style.height = "100px"
+    newCoin.style.display = "flex"
+    newCoin.style.margin = "5px"
+    newCoin.style['flex-direction'] = "column"
+    newCoin.style['font-size'] = "8px"
+    newCoin.style['align-items'] = "center"
+    newCoin.style['justify-content'] = "center"
+
+    const coinImageURL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7R6JPI2d0NJE4XbWWmGDiD_FdVU16Ge45Ll0eS_Qvgr8LP1FOuIPeTHqpNr-sdrsxxcM&usqp=CAU"
+    const coinImage = document.createElement("img")
+    coinImage.src = coinImageURL
+    coinImage.style.width = '45px'
+    coinImage.style.height = '45px'
+    coinImage.style['margin-top'] = "1px"
+    coinImage.style['margin-bottom'] = "1px"
+    coinImage.style.padding = "2px"
+    newCoin.append(coinImage)
+
+    const coinNameDiv = document.createElement("div")
+    coinNameDiv.innerHTML = "Coin Name: " + coin.toString()
+    newCoin.append(coinNameDiv)
+
+    const coinIDDiv = document.createElement("div")
+    coinIDDiv.innerHTML = "Coin ID: " + coin.join(coinID).toString()
+    newCoin.append(coinIDDiv)
+
+    const coinSpentDiv = document.createElement("div")
+    coinSpentDiv.innerHTML = "Spent: " + coin.join(spent).toString()
+    newCoin.append(coinSpentDiv)
+    
+    return newCoin
+}
+
+function createCoinsSet() {
+    coinContainer = document.createElement("div")
+    coinContainer.innerHTML = "Minted Coins"
+    coinContainer.style.border = "thin solid black"
+    coinContainer.style.padding = "3px"
+    coinContainer.style.width = "auto"
+    coinContainer.style.height = "auto"
+    coinContainer.style.margin = "5px"
+    coinContainer.style.display = "flex"
+    coinContainer.style['flex-direction'] = "column"
+
+    coinDiv = document.createElement("div")
+    coinContainer.append(coinDiv)
+    coinDiv.style.display = "flex"
+    coinDiv.style['flex-direction'] = "row"
+    coinDiv.style['flex-wrap'] = "wrap"
+    for (const ind in Minted.join(coins).tuples()) {
+        const coin = Minted.join(coins).tuples()[ind]
+        coinDiv.append(makeCoin(coin))
+    }
+
+    return coinContainer
+}
+
 function createStateDiv(state) {
     outerDiv = document.createElement("div")
     outerDiv.innerHTML = "<h1> " + "Blockchain State at Timestep " + state.toString()[state.toString().length - 1] + "</h1>"
@@ -433,14 +495,12 @@ function createStateDiv(state) {
     innerDiv.style['flex-direction'] = "row"
     innerDiv.style['flex-wrap'] = "wrap"
     innerDiv.append(createBlockChain(state))
-    // innerDiv.append(createGoodMiners())
-    // innerDiv.append(createBadMiners())
     innerDiv.append(createGoodP2PNetwork())
     for (const ind in BadP2PNetwork.tuples()) {
         const badP2PNetwork = BadP2PNetwork.tuples()[ind]
         innerDiv.append(createBadP2PNetwork(badP2PNetwork))
     }
-
+    innerDiv.append(createCoinsSet())
     outerDiv.append(innerDiv)
     return outerDiv
 }
