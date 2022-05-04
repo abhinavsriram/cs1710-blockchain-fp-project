@@ -7,10 +7,11 @@ function makeBlockDiv() {
     block.style.margin = "5px"
     block.style.padding = "3px"
     block.style['flex-direction'] = "column"
+    header.style['font-size'] = "12px"
     return block
 }
 
-function makeHeaderDiv() {
+function makeHeaderDiv(blockHeader) {
     var header = document.createElement("div")
     header.style.width = "130px"
     header.style.height = "85px"
@@ -18,12 +19,15 @@ function makeHeaderDiv() {
     header.style.display = "flex"
     header.style.margin = "5px"
     header.style.padding = "3px"
-    header.style['flex-direction'] = "column"
-    header.style['font-size'] = "12px"
+    header.style['flex-direction'] = "row"
+    header.style['font-size'] = "8px"
+    // header.append("block created at: " + blockHeader.join(time) + "\n")
+    // header.append("block nonce: " + blockHeader.join(nonce) + "\n")
+    // header.append("prev block hash: " + blockHeader.join(prevBlockHash) + "\n")
     return header
 }
 
-function makeTransactionsDiv() {
+function makeTransactionsDiv(blockTransactions) {
     var txs = document.createElement("div")
     txs.style.width = "130px"
     txs.style.height = "185px"
@@ -31,51 +35,46 @@ function makeTransactionsDiv() {
     txs.style.display = "flex"
     txs.style.margin = "5px"
     txs.style.padding = "3px"
-    txs.style['flex-direction'] = "column"
-    txs.style['font-size'] = "12px"
+    txs.style['flex-direction'] = "row"
+    txs.style['font-size'] = "8px"
+    for (const tx in blockTransactions.tuples()) {
+        txs.append(blockTransactions.tuples()[tx] + '\n')
+    }
     return txs
 }
 
 function makeBlockHashDiv() {
     var hash = document.createElement("div")
     hash.style.width = "130px"
-    hash.style.height = "30px"
+    hash.style.height = "20px"
     hash.style.border = "thin solid black"
     hash.style.display = "flex"
     hash.style.margin = "5px"
     hash.style.padding = "3px"
-    hash.style['align-items'] = "center"
-    hash.style['justify-content'] = "center"
-    hash.style['flex-direction'] = "column"
-    hash.style['font-size'] = "12px"
+    hash.style['flex-direction'] = "row"
+    hash.style['font-size'] = "8px"
+    hash.append("block hash: " + blockHash + "\n")
     return hash
 }
 
 function makeBlock(block) {
-    const blockHash = block.join(hash)
-    const blockHeader = block.join(header)
-    const blockTransactions = block.join(blockTxs)
-    const blockVotes = block.join(votes)
-    const blockApproved = block.join(approved)
+    // const blockHash = block.join(hash)
+    // const blockHeader = block.join(header)
+    // const blockTransactions = block.join(blockTxs)
+    // const blockVotes = block.join(votes)
+    // const blockApproved = block.join(approved)
 
     blockDiv = makeBlockDiv()
     blockDiv.innerHTML = "<h1> " + "Block " + block.toString()[block.toString().length - 1] + "</h1>"
 
-    headerDiv = makeHeaderDiv()
-    blockDiv.append(headerDiv)
-    for (const elm in blockHeader.tuples()) {
-        headerDiv.append(blockHeader.tuples()[elm])
-    }
+    // headerDiv = makeHeaderDiv(blockHeader)
+    // blockDiv.append(headerDiv)
 
-    txsDiv = makeTransactionsDiv()
-    blockDiv.append(txsDiv)
-    for (const tx in blockTransactions.tuples()) {
-        txsDiv.append(blockTransactions.tuples()[tx] + '\n')
-    }
+    // txsDiv = makeTransactionsDiv(blockTransactions)
+    // blockDiv.append(txsDiv)
 
-    blockHashDiv = makeBlockHashDiv()
-    blockDiv.append(blockHashDiv)
-    blockHashDiv.append("block hash: " + blockHash + "\n")
+    // blockHashDiv = makeBlockHashDiv(blockHash)
+    // blockDiv.append(blockHashDiv)
 
     return blockDiv
 }
@@ -94,6 +93,9 @@ function createBlockChain(state) {
     blockChainDiv.style.display = "flex"
     blockChainDiv.style['flex-direction'] = "row"
     blockChainDiv.style['flex-wrap'] = "wrap"
+
+    console.log("fuck me")
+    console.log(state)
 
     for (const ind in state.join(blockchain).join(allBlocks).tuples()) {
         const block = state.join(blockchain).join(allBlocks).tuples()[ind]
