@@ -154,12 +154,13 @@ function makeBlock(block) {
 function createBlockChain(state) {
     blockChainContainer = document.createElement("div")
     blockChainContainer.innerHTML = "Blocks"
+    blockChainContainer.style.border = "thin solid black"
     blockChainContainer.style.width = "100%"
-    blockChainContainer.style.height = "450px"
+    blockChainContainer.style.height = "500px"
     blockChainContainer.style.margin = "5px"
+    blockChainContainer.style.padding = "5px"
     blockChainContainer.style.display = "flex"
     blockChainContainer.style['flex-direction'] = "column"
-    blockChainContainer.style['margin-bottom'] = "30px"
 
     blockChainDiv = document.createElement("div")
     blockChainContainer.append(blockChainDiv)
@@ -204,28 +205,6 @@ function makeMiner(miner) {
     return newMiner
 }
 
-function createMiners() {
-    minerContainer = document.createElement("div")
-    minerContainer.innerHTML = "Miners"
-    minerContainer.style.height = "100px"
-    minerContainer.style.margin = "5px"
-    minerContainer.style.display = "flex"
-    minerContainer.style['flex-direction'] = "column"
-
-    minerDiv = document.createElement("div")
-    minerContainer.append(minerDiv)
-    minerDiv.style.display = "flex"
-    minerDiv.style['flex-direction'] = "row"
-    minerDiv.style['flex-wrap'] = "wrap"
-
-    for (const ind in Miners.join(allMiners).tuples()) {
-        const miner = Miners.join(allMiners).tuples()[ind]
-        minerDiv.append(makeMiner(miner))
-    }
-
-    return minerContainer
-}
-
 function makeTxNameDiv(txName) {
     newTxNameDiv = document.createElement("div")
     newTxNameDiv.style['font-size'] = "8px"
@@ -258,7 +237,7 @@ function makeTxInputs(tx) {
         if (newTxInputDiv.innerHTML == "") {
             newTxInputDiv.innerHTML = "Inputs: " + formattedInputString
         } else {
-            newTxInputDiv.innerHTML += formattedInputString
+            newTxInputDiv.innerHTML += ", " + formattedInputString
         }
     }
     return newTxInputDiv
@@ -282,7 +261,7 @@ function makeTxOutputs(tx) {
         if (newTxOutputDiv.innerHTML == "") {
             newTxOutputDiv.innerHTML = "Outputs: " + formattedOutputString
         } else {
-            newTxOutputDiv.innerHTML += formattedOutputString
+            newTxOutputDiv.innerHTML += ", " + formattedOutputString
         }
     }
     return newTxOutputDiv
@@ -307,20 +286,89 @@ function makeTransaction(tx) {
     return newTxDiv
 }
 
-function createTransactions() {
-    transactionContainer = document.createElement("div")
-    transactionContainer.innerHTML = "Transactions"
-    transactionContainer.style.height = "100px"
-    transactionContainer.style.margin = "5px"
-    transactionContainer.style.display = "flex"
-    transactionContainer.style['flex-direction'] = "column"
+function createGoodP2PNetwork() {
+    goodP2PNetworkContainer = document.createElement("div")
+    goodP2PNetworkContainer.innerHTML = "Good P2P Network"
+    goodP2PNetworkContainer.style.border = "thin solid black"
+    goodP2PNetworkContainer.style.padding = "5px"
+    goodP2PNetworkContainer.style.height = "auto"
+    goodP2PNetworkContainer.style.margin = "5px"
+    goodP2PNetworkContainer.style.display = "flex"
+    goodP2PNetworkContainer.style['flex-direction'] = "column"
+
+    minerHeadingDiv = document.createElement("div")
+    minerHeadingDiv.style['font-size'] = "12px"
+    minerHeadingDiv.style.padding = "3px"
+    minerHeadingDiv.append("Miners")
+    goodP2PNetworkContainer.append(minerHeadingDiv)
+
+    minerDiv = document.createElement("div")
+    goodP2PNetworkContainer.append(minerDiv)
+    minerDiv.style.display = "flex"
+    minerDiv.style['flex-direction'] = "row"
+    minerDiv.style['flex-wrap'] = "wrap"
+    for (const ind in GoodMiner.tuples()) {
+        const miner = GoodMiner.tuples()[ind]
+        minerDiv.append(makeMiner(miner))
+    }
+
+    transactionHeadingDiv = document.createElement("div")
+    transactionHeadingDiv.style['font-size'] = "12px"
+    transactionHeadingDiv.style.padding = "3px"
+    transactionHeadingDiv.append("Transactions")
+    goodP2PNetworkContainer.append(transactionHeadingDiv)
 
     for (const ind in GoodP2PNetwork.join(networkTxs).tuples()) {
         tx = GoodP2PNetwork.join(networkTxs).tuples()[ind]
-        transactionContainer.append(makeTransaction(tx))
+        goodP2PNetworkContainer.append(makeTransaction(tx))
     }
 
-    return transactionContainer
+    return goodP2PNetworkContainer
+}
+
+function createBadP2PNetwork(badNetwork) {
+    badP2PNetworkContainer = document.createElement("div")
+    badP2PNetworkContainer.innerHTML = "Bad P2P Network " + badNetwork.toString()[badNetwork.toString().length - 1]
+    badP2PNetworkContainer.style.border = "thin solid black"
+    badP2PNetworkContainer.style.padding = "5px"
+    badP2PNetworkContainer.style.height = "auto"
+    badP2PNetworkContainer.style.margin = "5px"
+    badP2PNetworkContainer.style.display = "flex"
+    badP2PNetworkContainer.style['flex-direction'] = "column"
+
+    minerHeadingDiv = document.createElement("div")
+    minerHeadingDiv.style['font-size'] = "12px"
+    minerHeadingDiv.style.padding = "3px"
+    minerHeadingDiv.append("Miners")
+    badP2PNetworkContainer.append(minerHeadingDiv)
+
+    minerDiv = document.createElement("div")
+    badP2PNetworkContainer.append(minerDiv)
+    minerDiv.style.display = "flex"
+    minerDiv.style['flex-direction'] = "row"
+    minerDiv.style['flex-wrap'] = "wrap"
+    for (const ind in BadMiner.tuples()) {
+        const miner = BadMiner.tuples()[ind]
+        console.log("testing")
+        console.log(miner.join(network).tuples()[0].toString())
+        console.log(badNetwork.toString())
+        if (miner.join(network).tuples()[0].toString() == badNetwork.toString()) {
+            minerDiv.append(makeMiner(miner))
+        }
+    }
+
+    transactionHeadingDiv = document.createElement("div")
+    transactionHeadingDiv.style['font-size'] = "12px"
+    transactionHeadingDiv.style.padding = "3px"
+    transactionHeadingDiv.append("Transactions")
+    badP2PNetworkContainer.append(transactionHeadingDiv)
+
+    for (const ind in badNetwork.join(networkTxs).tuples()) {
+        tx = badNetwork.join(networkTxs).tuples()[ind]
+        badP2PNetworkContainer.append(makeTransaction(tx))
+    }
+
+    return badP2PNetworkContainer
 }
 
 function createStateDiv(state) {
@@ -337,8 +385,11 @@ function createStateDiv(state) {
     innerDiv.style['flex-direction'] = "row"
     innerDiv.style['flex-wrap'] = "wrap"
     innerDiv.append(createBlockChain(state))
-    innerDiv.append(createMiners())
-    innerDiv.append(createTransactions())
+    innerDiv.append(createGoodP2PNetwork())
+    for (const ind in BadP2PNetwork.tuples()) {
+        const badP2PNetwork = BadP2PNetwork.tuples()[ind]
+        innerDiv.append(createBadP2PNetwork(badP2PNetwork))
+    }
     outerDiv.append(innerDiv)
     return outerDiv
 }
