@@ -171,6 +171,27 @@ function createBlockChain(state) {
     for (const ind in state.join(blockchain).join(allBlocks).tuples()) {
         const block = state.join(blockchain).join(allBlocks).tuples()[ind]
         blockChainDiv.append(makeBlock(block))
+        blockConnectionWrapperDiv = document.createElement("div")
+        blockConnectionWrapperDiv.style.width = "100px"
+        blockConnectionWrapperDiv.style.height = "445px"
+        blockConnectionWrapperDiv.style.margin = "5px"
+        blockConnectionWrapperDiv.style.padding = "5px"
+        blockConnectionWrapperDiv.style['padding-top'] = "35px"
+        blockConnectionWrapperDiv.style.display = "flex"
+        blockConnectionWrapperDiv.style['flex-direction'] = "column"
+
+        const blockConnectionArrowURL = "https://i.ibb.co/7yDVW2C/blockconnectionarrow.png"
+        blockConnectionArrow = document.createElement("img")
+        blockConnectionArrow.src = blockConnectionArrowURL
+        blockConnectionArrow.style.width = '100%'
+        blockConnectionArrow.style.height = '97%'
+        blockConnectionArrow.style['margin-top'] = "2px"
+        blockConnectionArrow.style['margin-bottom'] = "2px"
+        blockConnectionArrow.style.padding = "2px"
+        blockConnectionWrapperDiv.append(blockConnectionArrow)
+        if (ind != state.join(blockchain).join(allBlocks).tuples().length - 1) {
+            blockChainDiv.append(blockConnectionWrapperDiv)
+        }
     }
     
     return blockChainContainer
