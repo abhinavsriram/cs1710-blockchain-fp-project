@@ -74,7 +74,7 @@ function makeApprovalDiv(blockApproved, blockVotes) {
     approval.style.padding = "3px"
     approval.style['flex-direction'] = "column"
     approval.style['font-size'] = "8px"
-    approval.append("Approved, Votes: " + blockApproved + ", " + blockVotes + "\n")
+    approval.append(blockApproved + " Approved With " + blockVotes + " of " + Miners.join(allMiners).tuples().length + " Votes")
     return approval
 }
 
@@ -135,9 +135,9 @@ function makeBlock(block) {
     headerDiv = makeHeaderDiv(blockHeader)
     blockDiv.append(headerDiv)
     
-    var blockApprovedFormatted = "No"
+    var blockApprovedFormatted = "Not"
     if (blockApproved == 1) {
-        blockApprovedFormatted = "Yes"
+        blockApprovedFormatted = ""
     }
     approvalDiv = makeApprovalDiv(blockApprovedFormatted, blockVotes)
     blockDiv.append(approvalDiv)
