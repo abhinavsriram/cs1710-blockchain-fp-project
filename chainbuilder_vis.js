@@ -282,12 +282,12 @@ function makeTxNameDiv(txName) {
     return newTxNameDiv
 }
 
-function makeTxIDDiv(txID) {
-    newTxIDDiv = document.createElement("div")
-    newTxIDDiv.style['font-size'] = "8px"
-    newTxIDDiv.innerHTML = "Transaction ID: " + txID
-    return newTxIDDiv
-}
+// function makeTxIDDiv(txID) {
+//     newTxIDDiv = document.createElement("div")
+//     newTxIDDiv.style['font-size'] = "8px"
+//     newTxIDDiv.innerHTML = "Transaction ID: " + txID
+//     return newTxIDDiv
+// }
 
 function makeTxInputs(tx) {
     newTxInputDiv = document.createElement("div")
@@ -303,7 +303,9 @@ function makeTxInputs(tx) {
                 formattedInputString += ", " + coin.toString()
             }
         }
-        formattedInputString += ")"
+        if (formattedInputString != input.toString()) {
+            formattedInputString += ")"
+        }
         if (newTxInputDiv.innerHTML == "") {
             newTxInputDiv.innerHTML = "Inputs: " + formattedInputString
         } else {
@@ -317,17 +319,19 @@ function makeTxOutputs(tx) {
     newTxOutputDiv = document.createElement("div")
     newTxOutputDiv.style['font-size'] = "8px"
     for (const ind in tx.join(outputs).tuples()) {
-        const input = tx.join(outputs).tuples()[ind]
-        var formattedOutputString = input.toString()
-        for (const ind2 in input.join(outputCoins).tuples()) {
-            const coin = input.join(outputCoins).tuples()[ind2]
-            if (formattedOutputString == input.toString()) {
+        const output = tx.join(outputs).tuples()[ind]
+        var formattedOutputString = output.toString()
+        for (const ind2 in output.join(outputCoins).tuples()) {
+            const coin = output.join(outputCoins).tuples()[ind2]
+            if (formattedOutputString == output.toString()) {
                 formattedOutputString += "(" + coin.toString()
             } else {
                 formattedOutputString += ", " + coin.toString()
             }
         }
-        formattedOutputString += ")"
+        if (formattedOutputString != output.toString()) {
+            formattedOutputString += ")"
+        }
         if (newTxOutputDiv.innerHTML == "") {
             newTxOutputDiv.innerHTML = "Outputs: " + formattedOutputString
         } else {
@@ -349,7 +353,7 @@ function makeTransaction(tx) {
     newTxDiv.style['font-size'] = "8px"
 
     newTxDiv.append(makeTxNameDiv(tx.toString()))
-    newTxDiv.append(makeTxIDDiv(tx.join(txID)))
+    // newTxDiv.append(makeTxIDDiv(tx.join(txID)))
     newTxDiv.append(makeTxInputs(tx))
     newTxDiv.append(makeTxOutputs(tx))
 
@@ -467,9 +471,9 @@ function makeCoin(coin) {
     coinNameDiv.innerHTML = "Coin Name: " + coin.toString()
     newCoin.append(coinNameDiv)
 
-    const coinIDDiv = document.createElement("div")
-    coinIDDiv.innerHTML = "Coin ID: " + coin.join(coinID).toString()
-    newCoin.append(coinIDDiv)
+    // const coinIDDiv = document.createElement("div")
+    // coinIDDiv.innerHTML = "Coin ID: " + coin.join(coinID).toString()
+    // newCoin.append(coinIDDiv)
 
     const coinSpentDiv = document.createElement("div")
     coinSpentDiv.innerHTML = "Spent: " + coin.join(spent).toString()
