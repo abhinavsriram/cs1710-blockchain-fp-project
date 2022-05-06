@@ -49,9 +49,6 @@ pred wellformedChain {
         b in bc.allBlocks iff blockInChain[b, bc]
     }
 
-    // block is in chain iff it reached consensus
-    reachConsensus
-
     // time is linear
     some last: TIME {
         no last.next
@@ -67,6 +64,11 @@ pred wellformedChain {
         }
         no first.blockchain.lastBlock
     }
+
+    // Set allMiners
+    all m: Miner {
+        m in Miners.allMiners
+    }
 }
 
 // a normal step appending to current chain (no fork)
@@ -79,8 +81,14 @@ pred step [b1, b2: BlockChain] {
     }
     some b2.lastBlock
 
+    // only one block is added at a time, to the end of the chain, and no other block changes
     #{b: FBlock | b in b1.allBlocks and b in b2.allBlocks} = #{b: FBlock | b in b1.allBlocks}
     #{b: FBlock | b in b2.allBlocks and not b in b1.allBlocks} = 1
+
+    b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
+
+    // Consensus
+    consensus[b2.lastBlock]
 }
 
 // generates traces
@@ -90,6 +98,16 @@ pred traces {
             step[t1.blockchain, t2.blockchain]
             t2.blockchain.lastBlock.header.time = t2
         }
+    }
+}
+
+// Include to force all blocks to contain a transaction
+pred allBlocksHaveTransaction {
+    all b: FBlock {
+        // block must have at least 1 transaction
+        some tx: Transaction {
+            tx in b.blockTxs
+        }   
     }
 }
 
