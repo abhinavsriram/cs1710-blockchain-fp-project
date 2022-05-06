@@ -80,10 +80,6 @@ pred step [b1, b2: BlockChain] {
     #{b: FBlock | b in b1.allBlocks and b in b2.allBlocks} = #{b: FBlock | b in b1.allBlocks}
     #{b: FBlock | b in b2.allBlocks and not b in b1.allBlocks} = 1
 
-    // block must have at least 1 transaction
-    some tx: Transaction {
-        tx in b2.lastBlock.blockTxs
-    }
     b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
 
     // Consensus
@@ -97,6 +93,16 @@ pred traces {
             step[t1.blockchain, t2.blockchain]
             t2.blockchain.lastBlock.header.time = t2
         }
+    }
+}
+
+// Include to force all blocks to contain a transaction
+pred allBlocksHaveTransaction {
+    all b: FBlock {
+        // block must have at least 1 transaction
+        some tx: Transaction {
+            tx in b.blockTxs
+        }   
     }
 }
 
