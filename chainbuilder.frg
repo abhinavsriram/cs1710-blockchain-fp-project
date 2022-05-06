@@ -2,6 +2,7 @@
 
 open "common.frg"
 open "blockchain.frg"
+open "block.frg"
 
 // a normal step appending to current chain (no fork)
 pred step [b1, b2: BlockChain] {
@@ -20,7 +21,7 @@ pred step [b1, b2: BlockChain] {
     // setting the blocksize in block header
     b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
 
-    // the newly added block must be added only if consensus is reached on the block
+    // the newly added block must have reached consensus
     consensus[b2.lastBlock]
 }
 

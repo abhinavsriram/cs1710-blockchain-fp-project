@@ -59,9 +59,30 @@ pred allNoncesUnique {
     }
 }
 
+// a block is added to the chain IFF a majority of miners approve the block
+// a miner approves the block when Block.transactions in Miner.network.transactions
+// increment Block.votes if a miner approves the block
+// block is approved when Block.votes > Miners.allMiners.len/2 + 1
+pred consensus[block: BlockX] {
+    #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1]
+}
+
+// labels if block is approved or not and enumerates votes
+pred blockConsensus {
+    all b: BlockX {
+        // if a block reaches consensus, it is marked as approved, else not approved
+        consensus[b] => b.approved = 1
+        not consensus[b] => b.approved = 0
+
+        // set number of votes
+        b.votes = #{m: Miner | m in Miners.allMiners and (b.blockTxs in m.network.networkTxs)}
+    }
+}
+
 pred wellformedBlocks {
     allBlocksInAChain
     allBlocksHaveTransaction
     allBlocksUnique
     allNoncesUnique
+    blockConsensus
 }
