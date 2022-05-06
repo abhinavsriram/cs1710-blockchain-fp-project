@@ -21,11 +21,11 @@ run {
     wellformedBlocks
     wellformedMiners
     wellformedNetworks
-    // not that wellformedTransactions currently forces all transactions to be goodTransactions
+    // note that wellformedTransactions currently forces all transactions to be goodTransactions
     wellformedTransactions
     wellformedChain
     traces
-} for exactly 3 TIME for { next is linear }
+} for exactly 3 TIME, 5 GoodMiner, 3 BadMiner for { next is linear }
 
 // shows a 51% attack on the blockchain
 // run {

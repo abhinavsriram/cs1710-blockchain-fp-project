@@ -20,9 +20,9 @@ pred wellformedMiners {
     all gm: GoodMiner {
         goodMiner[gm]
     }
-    all bm: BadMiner {
-        badMiner[bm]
-    }
+    // all bm: BadMiner {
+    //     badMiner[bm]
+    // }
     // every miner must be present in Miners.allMiners
     all m: Miner {
         m in Miners.allMiners

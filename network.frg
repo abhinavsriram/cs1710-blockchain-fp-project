@@ -38,6 +38,6 @@ pred badNetworkBadTransaction {
 pred wellformedNetworks {
     allNetworksHaveTransactions
     allNetworksDoNotShareTransactions
-    goodNetworkGoodTransaction
-    badNetworkBadTransaction
+    // goodNetworkGoodTransaction
+    // badNetworkBadTransaction
 }

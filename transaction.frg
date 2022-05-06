@@ -62,6 +62,7 @@ pred wellformedTransactions {
     wellformedOutputs
     wellformedCoins
     all tx: Transaction, b: BlockX {
-        goodTransaction[tx, b] or badTransaction[tx, b]
+        goodTransaction[tx, b]
+        // goodTransaction[tx, b] or badTransaction[tx, b]
     }
 }
