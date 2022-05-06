@@ -64,6 +64,11 @@ pred wellformedChain {
         }
         no first.blockchain.lastBlock
     }
+
+    // Set allMiners
+    all m: Miner {
+        m in Miners.allMiners
+    }
 }
 
 // a normal step appending to current chain (no fork)
