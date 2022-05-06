@@ -7,7 +7,7 @@
 // as needed
 // the blockchain sig represents state in our traces
 sig BlockChain {
-    lastBlock: one FBlock,
+    lastBlock: lone FBlock,
     allBlocks: set FBlock
 }
 

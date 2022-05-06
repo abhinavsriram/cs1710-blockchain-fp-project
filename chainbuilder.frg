@@ -44,15 +44,6 @@ pred wellformedChain {
         b1.hash = b2.hash => b1 = b2
     }
 
-    // the blockChain is linear
-    all bc: BlockChain {
-        // no cycles
-        some root: FBlock {
-            no root.header.prevBlockHash
-            blockInChain[root, bc]
-        }
-    }
-
     all b: FBlock, bc:BlockChain {
         // block is in allBlocks iff it is in the chain
         b in bc.allBlocks iff blockInChain[b, bc]
@@ -69,19 +60,36 @@ pred wellformedChain {
         all other: TIME {
             reachable[other, first, next] or other = first
         }
+
+        // BlockChain starts with no block
+        no b: FBlock {
+            b in first.blockchain.allBlocks
+        }
+        no first.blockchain.lastBlock
     }
 }
 
 // a normal step appending to current chain (no fork)
 pred step [b1, b2: BlockChain] {
     // the old lastBlock becomes the previous block of the new lastBlock
-    b2.lastBlock.header.prevBlockHash = b1.lastBlock.hash
+    some b1.lastBlock => {
+        b2.lastBlock.header.prevBlockHash = b1.lastBlock.hash
+    } else {
+        no b2.lastBlock.header.prevBlockHash
+    }
+    some b2.lastBlock
+
+    #{b: FBlock | b in b1.allBlocks and b in b2.allBlocks} = #{b: FBlock | b in b1.allBlocks}
+    #{b: FBlock | b in b2.allBlocks and not b in b1.allBlocks} = 1
 }
 
 // generates traces
 pred traces {
     all t1, t2: TIME {
-        t1.next = t2 => step[t1.blockchain, t2.blockchain]
+        t1.next = t2 => {
+            step[t1.blockchain, t2.blockchain]
+            t2.blockchain.lastBlock.header.time = t2
+        }
     }
 }
 
@@ -90,4 +98,4 @@ run {
     wellformedChain
     allBlocksInAChain
     traces
-} for exactly 3 TIME, 5 GoodMiner
+} for exactly 3 TIME, 5 GoodMiner for { next is linear }
