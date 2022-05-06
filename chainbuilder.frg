@@ -1,7 +1,7 @@
 #lang forge
 
 open "blockchain.frg"
-
+open "security.frg"
 // a block is added to the chain IFF a majority of miners approve the block
 // a miner approves the block when Block.transactions in Miner.network.transactions
 // increment Block.votes if a miner approves the block
@@ -99,3 +99,5 @@ run {
     allBlocksInAChain
     traces
 } for exactly 3 TIME, 5 GoodMiner for { next is linear }
+    // all b: FBlock | majorityAttack[b]
+// } for exactly 3 TIME, exactly 1 GoodMiner
