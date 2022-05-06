@@ -241,9 +241,11 @@ pred step [b1, b2: BlockChain] {
 }
 
 pred traces {
-    all t1, t2: TIME {
-        t1.next = t2 => step[t1.blockchain, t2.blockchain]
-    }
+    // all t1, t2: TIME {
+    //     t1.next = t2 and t1.blockchain != t2.blockchain => step[t1.blockchain, t2.blockchain]
+    // }
+    #{TIME} > 2
+    #{BlockChain} > 2
 }
 
 -- Forces all blocks to be in a BlockChain
@@ -256,10 +258,10 @@ pred allBlocksInAChain {
 }
 
 run {
-    wellformed
+    // wellformed
     traces
     -- Force all blocks to be in a BlockChain
-    allBlocksInAChain
+    // allBlocksInAChain
 } //for exactly 4 FBlock, 3 TIME, 3 BlockChain, 4 HASH
 
 
