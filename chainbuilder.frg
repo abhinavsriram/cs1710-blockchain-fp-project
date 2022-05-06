@@ -90,5 +90,5 @@ run {
     wellformedChain
     allBlocksInAChain
     traces
-    // majorityAttack
-} for exactly 3 TIME, 5 GoodMiner
+    // all b: FBlock | majorityAttack[b]
+} for exactly 3 TIME, exactly 1 GoodMiner
