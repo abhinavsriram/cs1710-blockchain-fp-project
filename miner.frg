@@ -17,9 +17,9 @@ pred wellformedMiners {
     all m: Miner {
         goodMiner[m] or badMiner[m]
     }
-    all gm: GoodMiner {
-        goodMiner[gm]
-    }
+    // all gm: GoodMiner {
+    //     goodMiner[gm]
+    // }
     // all bm: BadMiner {
     //     badMiner[bm]
     // }

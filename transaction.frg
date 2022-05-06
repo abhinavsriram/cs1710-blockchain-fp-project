@@ -17,7 +17,7 @@ pred validOutput[output: Output] {
     #{c: Coin | c in output.outputCoins} >= 1
     output.outputCoins in Minted.coins
     all c: output.outputCoins {
-        c.spent = 1
+        c.spent = 0
     }
 }
 

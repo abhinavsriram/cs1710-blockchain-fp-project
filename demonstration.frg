@@ -25,7 +25,7 @@ run {
     wellformedTransactions
     wellformedChain
     traces
-} for exactly 3 TIME, 5 GoodMiner, 3 BadMiner for { next is linear }
+} for exactly 3 TIME, exactly 5 GoodMiner, exactly 3 BadMiner for { next is linear }
 
 // shows a 51% attack on the blockchain
 // run {
