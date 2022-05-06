@@ -79,8 +79,14 @@ pred step [b1, b2: BlockChain] {
     }
     some b2.lastBlock
 
+    // only one block is added at a time, to the end of the chain, and no other block changes
     #{b: FBlock | b in b1.allBlocks and b in b2.allBlocks} = #{b: FBlock | b in b1.allBlocks}
     #{b: FBlock | b in b2.allBlocks and not b in b1.allBlocks} = 1
+
+    some tx: Transaction {
+        tx in b2.lastBlock.blockTxs
+    }
+    b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
 }
 
 // generates traces
