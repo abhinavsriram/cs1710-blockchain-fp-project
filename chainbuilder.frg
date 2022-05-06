@@ -49,9 +49,6 @@ pred wellformedChain {
         b in bc.allBlocks iff blockInChain[b, bc]
     }
 
-    // block is in chain iff it reached consensus
-    reachConsensus
-
     // time is linear
     some last: TIME {
         no last.next
@@ -83,10 +80,14 @@ pred step [b1, b2: BlockChain] {
     #{b: FBlock | b in b1.allBlocks and b in b2.allBlocks} = #{b: FBlock | b in b1.allBlocks}
     #{b: FBlock | b in b2.allBlocks and not b in b1.allBlocks} = 1
 
+    // block must have at least 1 transaction
     some tx: Transaction {
         tx in b2.lastBlock.blockTxs
     }
     b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
+
+    // Consensus
+    consensus[b2.lastBlock]
 }
 
 // generates traces
