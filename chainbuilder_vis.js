@@ -169,7 +169,8 @@ function createBlockChain(state) {
     blockChainDiv.style['flex-wrap'] = "wrap"
 
     for (const ind in state.join(blockchain).join(allBlocks).tuples()) {
-        const block = state.join(blockchain).join(allBlocks).tuples()[ind]
+        reverseInd = state.join(blockchain).join(allBlocks).tuples().length - 1 - ind
+        const block = state.join(blockchain).join(allBlocks).tuples()[reverseInd]
         blockChainDiv.append(makeBlock(block))
         blockConnectionWrapperDiv = document.createElement("div")
         blockConnectionWrapperDiv.style.width = "100px"
