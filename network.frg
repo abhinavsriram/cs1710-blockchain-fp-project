@@ -16,7 +16,7 @@ pred allNetworksHaveTransactions {
 pred allNetworksDoNotShareTransactions {
     all tx: Transaction {
         all disj n1, n2: P2PNetwork {
-            tx in n1 iff tx not in n2
+            tx in n1.networkTxs => tx not in n2.networkTxs
         }
     }
 }
