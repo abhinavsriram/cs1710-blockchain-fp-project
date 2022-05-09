@@ -23,15 +23,15 @@ pred allNetworksDoNotShareTransactions {
 
 // good networks must only have good transactions
 pred goodNetworkGoodTransaction {
-    all tx: Transaction, b: BlockX {
-        tx in GoodP2PNetwork iff goodTransaction[tx, b]
+    all tx: Transaction, b: BlockX, goodNet: GoodP2PNetwork {
+        tx in goodNet.networkTxs => goodTransaction[tx, b]
     }
 }
 
 // bad networks can have good and bad transactions
 pred badNetworkBadTransaction {
-    all tx: Transaction, b: BlockX {
-        tx in BadP2PNetwork iff goodTransaction[tx, b] or badTransaction[tx, b]
+    all tx: Transaction, b: BlockX, badNet: BadP2PNetwork {
+        tx in badNet.networkTxs => goodTransaction[tx, b] or badTransaction[tx, b]
     }
 }
 

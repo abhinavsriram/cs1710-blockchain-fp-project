@@ -222,7 +222,11 @@ function makeMiner(miner) {
 
     const minerNameDiv = document.createElement("div")
     minerNameDiv.style.margin = "5px"
-    minerNameDiv.innerHTML = "Miner " + miner.toString()[miner.toString().length - 1]
+    if (miner.toString()[0] == "B" || miner.toString()[0] == "b") {
+        minerNameDiv.innerHTML = "Bad Miner " + miner.toString()[miner.toString().length - 1]
+    } else if (miner.toString()[0] == "G" || miner.toString()[0] == "g") {
+        minerNameDiv.innerHTML = "Good Miner " + miner.toString()[miner.toString().length - 1]
+    }
     newMiner.append(minerNameDiv)
     
     return newMiner
