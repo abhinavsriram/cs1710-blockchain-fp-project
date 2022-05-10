@@ -3,14 +3,6 @@
 open "common.frg"
 open "block.frg"
 
-// a block is added to the chain IFF a majority of miners approve the block
-// a miner approves the block when Block.transactions in Miner.network.transactions
-// increment Block.votes if a miner approves the block
-// block is approved when Block.votes > Miners.allMiners.len/2 + 1
-pred consensus[block: BlockX] {
-    #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1] implies block.approved = 1   
-}
-
 pred wellformedChain {
     // blocks can only have the same hash if they are the same block
     all b1, b2: BlockX {

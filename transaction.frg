@@ -32,7 +32,10 @@ pred goodTransaction[tx: Transaction, block: BlockX] {
     all i: tx.inputs | validInput[i]
     all o: tx.outputs | validOutput[o]
 }
-
+// a transaction should only be contained in one block 
+pred transactionOnlyInOneBlock {
+    all tx: Transaction | all disj b1, b2 : BlockX | tx in b1.blockTxs => tx not in b2.blockTxs
+}
 // if any of the above condiitons are violated, then it is a bad transaction
 pred badTransaction[tx: Transaction, block: BlockX] {
     not goodTransaction[tx, block]
@@ -64,4 +67,5 @@ pred wellformedTransactions {
     all tx: Transaction, b: BlockX {
         goodTransaction[tx, b] or badTransaction[tx, b]
     }
+    transactionOnlyInOneBlock
 }
