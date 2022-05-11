@@ -215,12 +215,12 @@ function createBlockChain(state) {
 function makeMiner(miner) {
     newMiner = document.createElement("div")
     newMiner.style.border = "thin solid black"
-    newMiner.style.width = "65px"
-    newMiner.style.height = "70px"
+    newMiner.style.width = "55px"
+    newMiner.style.height = "60px"
     newMiner.style.display = "flex"
     newMiner.style.margin = "10px"
     newMiner.style['flex-direction'] = "column"
-    newMiner.style['font-size'] = "8px"
+    newMiner.style['font-size'] = "6px"
     newMiner.style['align-items'] = "center"
     newMiner.style['justify-content'] = "center"
 
@@ -411,12 +411,12 @@ function createBadP2PNetwork(badNetwork) {
 function makeCoin(coin) {
     newCoin = document.createElement("div")
     newCoin.style.border = "thin solid black"
-    newCoin.style.width = "80px"
-    newCoin.style.height = "100px"
+    newCoin.style.width = "60px"
+    newCoin.style.height = "80px"
     newCoin.style.display = "flex"
     newCoin.style.margin = "5px"
     newCoin.style['flex-direction'] = "column"
-    newCoin.style['font-size'] = "8px"
+    newCoin.style['font-size'] = "6px"
     newCoin.style['align-items'] = "center"
     newCoin.style['justify-content'] = "center"
 
