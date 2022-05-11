@@ -50,8 +50,25 @@ pred allBlocksInAChain {
     }
 }
 
+// a block is added to the chain IFF a majority of miners vote for the block
+// a miner votes for the block when all txs in block are also in miner's network
+pred consensus[block: BlockX] {
+    #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= divide[#{m: Miner | m in Miners.allMiners}, 2]
+}
+
+// labels if block is approved or not and enumerates votes
+pred allBlocksObeyConsensus {
+    all b: BlockX {
+        // if a block reaches consensus, it is marked as approved, else not approved
+        consensus[b] => b.approved = 1
+        not consensus[b] => b.approved = 0
+        // set number of votes
+        b.votes = #{m: Miner | m in Miners.allMiners and (b.blockTxs in m.network.networkTxs)}
+    }
+}
+
 // forces all blocks to contain a transaction
-pred allBlocksHaveTransaction {
+pred allBlocksHaveTransactions {
     all b: BlockX {
         // block must have at least 1 transaction from some P2PNetwork
         some tx: Transaction {
@@ -66,27 +83,10 @@ pred allBlocksHaveTransaction {
     }
 }
 
-// a block is added to the chain IFF a majority of miners vote for the block
-// a miner votes for the block when all txs in block are also in miner's network
-pred consensus[block: BlockX] {
-    #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1]
-}
-
-// labels if block is approved or not and enumerates votes
-pred allBlocksReachConsensusOnChain {
-    all b: BlockX {
-        // if a block reaches consensus, it is marked as approved, else not approved
-        consensus[b] => b.approved = 1
-        not consensus[b] => b.approved = 0
-        // set number of votes
-        b.votes = #{m: Miner | m in Miners.allMiners and (b.blockTxs in m.network.networkTxs)}
-    }
-}
-
 pred wellformedBlocks {
     allBlocksUnique
     allNoncesUnique
     allBlocksInAChain
-    allBlocksHaveTransaction
-    allBlocksReachConsensusOnChain
+    allBlocksObeyConsensus
+    allBlocksHaveTransactions
 }

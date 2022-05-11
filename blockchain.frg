@@ -4,6 +4,10 @@ open "common.frg"
 open "block.frg"
 
 pred wellformedChain {
+    // all blocks in the blockchain must have reached consensus
+    all b: BlockX, bc: BlockChain {
+        b in bc.allBlocks => consensus[b]
+    }
     // block is in allBlocks iff it is part of the chain
     all b: BlockX, bc: BlockChain {
         b in bc.allBlocks iff blockPartOfChain[b, bc]

@@ -491,7 +491,6 @@ function createStateDiv(state) {
 
 function createStates() {
     scrollableStates = document.createElement("div")
-    scrollableStates.style.overflow = "scroll"
     scrollableStates.style.width = "100%"
     scrollableStates.style.height = "100%"
     scrollableStates.style.margin = "5px"

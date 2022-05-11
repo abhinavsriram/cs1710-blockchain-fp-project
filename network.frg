@@ -3,6 +3,15 @@
 open "common.frg"
 open "transaction.frg"
 
+// all networks must have at least 1 miner
+pred allNetworksHaveMiners {
+    all n: P2PNetwork | {
+        some m: Miner {
+            m.network = n
+        }
+    }
+}
+
 // all networks must have at least 1 transaction
 pred allNetworksHaveTransactions {
     all n: P2PNetwork | {
@@ -36,6 +45,7 @@ pred badNetworkBadTransaction {
 }
 
 pred wellformedNetworks {
+    allNetworksHaveMiners
     allNetworksHaveTransactions
     allNetworksDoNotShareTransactions
     goodNetworkGoodTransaction
