@@ -20,9 +20,7 @@ pred badNetworkBadTransaction {
 // all networks are either good or bad
 pred allNetworkGoodOrBad {
     all n: P2PNetwork {
-        some gn: GoodP2PNetwork, bn: BadP2PNetwork {
-            n = gn or n = bn
-        }
+        n = GoodP2PNetwork or n = BadP2PNetwork
     }
 }
 

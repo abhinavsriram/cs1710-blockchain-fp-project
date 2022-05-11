@@ -4,6 +4,10 @@ open "common.frg"
 open "block.frg"
 
 pred wellformedChain {
+    // there should not be any hanging blockchains
+    all bc: BlockChain {
+        some t: TIME | t.blockchain = bc
+    }
     // all blocks in the blockchain must have reached consensus
     all b: BlockX, bc: BlockChain {
         b in bc.allBlocks => consensus[b]
