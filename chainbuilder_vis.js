@@ -167,10 +167,24 @@ function createBlockChain(state) {
     blockChainDiv.style.display = "flex"
     blockChainDiv.style['flex-direction'] = "row"
     blockChainDiv.style['flex-wrap'] = "wrap"
-
+    
+    firstIteration = true
+    useReverse = false
     for (const ind in state.join(blockchain).join(allBlocks).tuples()) {
-        reverseInd = state.join(blockchain).join(allBlocks).tuples().length - 1 - ind
-        const block = state.join(blockchain).join(allBlocks).tuples()[reverseInd]
+        if (firstIteration) {
+            const firstBlock = state.join(blockchain).join(allBlocks).tuples()[ind]
+            if (firstBlock.join(header).join(prevBlockHash).toString() != "") {
+                useReverse = true
+            }
+            firstIteration = false
+        }
+        block = null
+        if (useReverse) {
+            reverseInd = state.join(blockchain).join(allBlocks).tuples().length - 1 - ind
+            block = state.join(blockchain).join(allBlocks).tuples()[reverseInd]
+        } else {
+            block = state.join(blockchain).join(allBlocks).tuples()[ind]
+        }
         blockChainDiv.append(makeBlock(block))
         blockConnectionWrapperDiv = document.createElement("div")
         blockConnectionWrapperDiv.style.width = "100px"
@@ -201,8 +215,8 @@ function createBlockChain(state) {
 function makeMiner(miner) {
     newMiner = document.createElement("div")
     newMiner.style.border = "thin solid black"
-    newMiner.style.width = "55px"
-    newMiner.style.height = "65px"
+    newMiner.style.width = "65px"
+    newMiner.style.height = "70px"
     newMiner.style.display = "flex"
     newMiner.style.margin = "10px"
     newMiner.style['flex-direction'] = "column"
@@ -232,67 +246,12 @@ function makeMiner(miner) {
     return newMiner
 }
 
-// function createGoodMiners() {
-//     minerContainer = document.createElement("div")
-//     minerContainer.innerHTML = "Good Miners"
-//     minerContainer.style.border = "thin solid black"
-//     minerContainer.style.height = "100px"
-//     minerContainer.style.margin = "5px"
-//     minerContainer.style.padding = "5px"
-//     minerContainer.style.display = "flex"
-//     minerContainer.style['flex-direction'] = "column"
-
-//     minerDiv = document.createElement("div")
-//     minerContainer.append(minerDiv)
-//     minerDiv.style.display = "flex"
-//     minerDiv.style['flex-direction'] = "row"
-//     minerDiv.style['flex-wrap'] = "wrap"
-
-//     for (const ind in GoodMiner.tuples()) {
-//         const miner = GoodMiner.tuples()[ind]
-//         minerDiv.append(makeMiner(miner))
-//     }
-
-//     return minerContainer
-// }
-
-// function createBadMiners() {
-//     minerContainer = document.createElement("div")
-//     minerContainer.innerHTML = "Bad Miners"
-//     minerContainer.style.border = "thin solid black"
-//     minerContainer.style.height = "100px"
-//     minerContainer.style.margin = "5px"
-//     minerContainer.style.padding = "5px"
-//     minerContainer.style.display = "flex"
-//     minerContainer.style['flex-direction'] = "column"
-
-//     minerDiv = document.createElement("div")
-//     minerContainer.append(minerDiv)
-//     minerDiv.style.display = "flex"
-//     minerDiv.style['flex-direction'] = "row"
-//     minerDiv.style['flex-wrap'] = "wrap"
-
-//     for (const ind in BadMiner.tuples()) {
-//         const miner = BadMiner.tuples()[ind]
-//         minerDiv.append(makeMiner(miner))
-//     }
-
-//     return minerContainer
-// }
-
 function makeTxNameDiv(txName) {
     newTxNameDiv = document.createElement("div")
     newTxNameDiv.style['font-size'] = "8px"
     newTxNameDiv.innerHTML = "Transaction Name: " + txName
     return newTxNameDiv
 }
-
-// function makeTxIDDiv(txID) {
-//     newTxIDDiv = document.createElement("div")
-//     newTxIDDiv.style['font-size'] = "8px"
-//     newTxIDDiv.innerHTML = "Transaction ID: " + txID
-//     return newTxIDDiv
-// }
 
 function makeTxInputs(tx) {
     newTxInputDiv = document.createElement("div")
@@ -358,7 +317,6 @@ function makeTransaction(tx) {
     newTxDiv.style['font-size'] = "8px"
 
     newTxDiv.append(makeTxNameDiv(tx.toString()))
-    // newTxDiv.append(makeTxIDDiv(tx.join(txID)))
     newTxDiv.append(makeTxInputs(tx))
     newTxDiv.append(makeTxOutputs(tx))
 
@@ -475,10 +433,6 @@ function makeCoin(coin) {
     const coinNameDiv = document.createElement("div")
     coinNameDiv.innerHTML = "Coin Name: " + coin.toString()
     newCoin.append(coinNameDiv)
-
-    // const coinIDDiv = document.createElement("div")
-    // coinIDDiv.innerHTML = "Coin ID: " + coin.join(coinID).toString()
-    // newCoin.append(coinIDDiv)
 
     const coinSpentDiv = document.createElement("div")
     coinSpentDiv.innerHTML = "Spent: " + coin.join(spent).toString()
