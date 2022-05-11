@@ -25,7 +25,7 @@ run {
     wellformedTransactions
     wellformedChain
     traces
-} for exactly 3 TIME, exactly 1 GoodP2PNetwork, exactly 5 GoodMiner, exactly 1 BadP2PNetwork, exactly 3 BadMiner for { next is linear }
+} for exactly 3 TIME, exactly 1 GoodP2PNetwork, exactly 5 GoodMiner, exactly 2 BadP2PNetwork, exactly 3 BadMiner for { next is linear }
 
 // shows a 51% attack on the blockchain
 // run {

@@ -4,12 +4,12 @@ open "common.frg"
 
 // defines behavior of a GoodMiner
 pred goodMiner[m: Miner] {
-    m.network = GoodP2PNetwork
+    some gn: GoodP2PNetwork | m.network = gn
 }
 
 // defines behavior of a BadMiner
 pred badMiner[m: Miner] {
-    m.network = BadP2PNetwork
+    some bn: BadP2PNetwork | m.network = bn
 }
 
 pred wellformedMiners {
