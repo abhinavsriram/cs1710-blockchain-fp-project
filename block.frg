@@ -3,6 +3,7 @@
 open "common.frg"
 
 // forces all blocks to not share a hash, header or block transactions
+// blocks can obviously have the same votes or approval status
 pred allBlocksUnique {
     all b: BlockX {
         all ob: BlockX {
@@ -12,26 +13,27 @@ pred allBlocksUnique {
     }
 }
 
-// forces all blocks to have a unique nonce
-pred allNoncesUnique {
-    all b: BlockX {
-        all ob: BlockX {
-            b != ob => b.header.nonce != ob.header.nonce
+// forces all headers to not share a timestamp, nonce, prevBlockHash or merkleRootHash
+// headers can obviously have the same version or block size
+pred allHeadersUnique {
+    all h: Header {
+        all oh: Header {
+            h != oh => h.time != oh.time and h.nonce != oh.nonce and h.prevBlockHash != oh.prevBlockHash and h.merkleRootHash != oh.merkleRootHash
         }
     }
 }
 
 // check that the block is legally part of a blockchain
-pred blockPartOfChain[b: BlockX, bc: BlockChain] {
+pred blockInAChainLegally[currBlock: BlockX, chain: BlockChain] {
     // check that it points to another block and another block points to it
-    bc.lastBlock != b => {
-        some next: BlockX {
-            next.header.prevBlockHash = b.hash
-            next in bc.allBlocks
+    currBlock != chain.lastBlock => {
+        some nextBlock: BlockX {
+            nextBlock.header.prevBlockHash = currBlock.hash
+            nextBlock in chain.allBlocks
         } 
     }
     // also checks that the block is in BlockChain.allBlocks
-    b in bc.allBlocks
+    currBlock in chain.allBlocks
 }
 
 // forces all blocks to be in a chain
@@ -40,7 +42,7 @@ pred allBlocksInAChain {
     // currently only have one blockchain so all blocks must be in that chain
     all b: BlockX {
         some bc: BlockChain {
-            blockPartOfChain[b, bc]
+            blockInAChainLegally[b, bc]
         }
     }
     // all blocks in a chain must have the same version
@@ -87,7 +89,7 @@ pred allBlocksHaveTransactions {
 
 pred wellformedBlocks {
     allBlocksUnique
-    allNoncesUnique
+    allHeadersUnique
     allBlocksInAChain
     allBlocksObeyConsensus
     allBlocksHaveTransactions

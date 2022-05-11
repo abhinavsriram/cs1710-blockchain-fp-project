@@ -1,16 +1,17 @@
 #lang forge
 
-// each block contains the following fields
-// hash: HASH sig;
-//       - unique hash representing the block
-// header: Header sig;
-//         - described further below
-// transactions: Transaction set;
-//               - set of all Transaction(s) in the Block
-// votes: Int;
-//        - counter for the number of votes the block gets for consensus
-// approved: Int;
-//           - 0 if not approved by consensus, 1 if approved by consensus
+// each block contains the following fields:
+// hash: HASH sig; 
+// unique hash representing the block
+// header: Header sig; 
+// described further below
+// blockTxs: Transaction set; 
+// set of all Transaction(s) in the Block
+// votes: Int; 
+// number of votes the block gets for consensus
+// approved: Int; 
+// 0 if not approved by consensus, 1 if approved by consensus
+// *constrained in block.frg*
 sig BlockX {
     hash: one HASH,
     header: one Header,
@@ -19,24 +20,20 @@ sig BlockX {
     approved: one Int
 }
 
-// each header contains the following fields
+// each header contains the following fields:
 // version: Int; 
-//          - represents the version of the blockchain we are using
-//          - useful for representing hard forks
+// represents the version of the blockchain we are using; useful for representing hard forks
 // time: TIME sig; 
-//       - represents the time step at which this block was mined
-//       - useful for ordering blocks
+// represents the time step at which this block was mined; useful for ordering blocks
 // nonce: NONCE sig;
-//        - represents whether or not a block has the nonce
-//        - block can be added to chain IFF it has the nonce
+// represents whether or not a block has the nonce; block can be added to chain IFF it has the nonce
 // blocksize: Int;
-//            - represents number of transactions in a block
-//            - useful for changing block sizes during hard forks
-//            - also useful for spotting bad blocks from bad miners
+// represents number of transactions in a block; useful for changing block sizes during hard forks
 // prevBlockHash: HASH sig;
-//                - this is a reference to the unique hash of the previous block
+// this is a reference to the unique hash of the previous block
 // merkleRootHash: HASH sig;
-//                 - may not be needed
+// this is a reference to the merkle root hash of txs in a block;
+// *constrained in block.frg*
 sig Header {
     version: one Int,
     time: one TIME,
@@ -47,15 +44,18 @@ sig Header {
 }
 
 // represents time (state)
+// *constrained in blockchain.frg*
 sig TIME {
     next: lone TIME,
     blockchain: one BlockChain
 }
 
 // represents a nonce for a block
+// *constrained in block.frg*
 sig NONCE {}
 
 // represents 256-bit hashes
+// *constrained in hash.frg*
 sig HASH {}
 
 // abstract sig representing a miner
@@ -122,6 +122,7 @@ sig Output {
 // using BlockChain.lastBlock.header.prevBlockHash which gives us the 
 // hash of the previous block, and we can continue to iterate backward 
 // as needed
+// *constrained in blockchain.frg*
 sig BlockChain {
     lastBlock: lone BlockX,
     allBlocks: set BlockX

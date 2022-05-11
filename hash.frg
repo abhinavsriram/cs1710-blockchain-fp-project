@@ -2,7 +2,7 @@
 
 open "common.frg"
 
-// helper pred that encodes all pssible hash combinations that need to be unique
+// helper pred that encodes all possible hash combinations that need to be unique
 pred uniqueCombinations[b: BlockX, ob: BlockX] {
     b.hash != ob.hash
     b.hash != ob.header.merkleRootHash
@@ -33,6 +33,8 @@ pred uniqueCombinations[b: BlockX, ob: BlockX] {
 }
 
 // ensure that every single hash being used in our blockchain is unique
+// this predicate is certainly repeating constraints from block.frg and blockchain.frg
+// but we preferred to be thorough and hence listed all possible combinations
 pred allHashesUnique {
     all b: BlockX {
         all ob: BlockX {

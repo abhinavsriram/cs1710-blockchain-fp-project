@@ -8,15 +8,16 @@ pred wellformedChain {
     all b: BlockX, bc: BlockChain {
         b in bc.allBlocks => consensus[b]
     }
-    // block is in allBlocks iff it is part of the chain
+    // all blocks in a blockchain must be legally part of that chain
     all b: BlockX, bc: BlockChain {
-        b in bc.allBlocks iff blockPartOfChain[b, bc]
+        b in bc.allBlocks iff blockInAChainLegally[b, bc]
     }
     // time is linear
     some last: TIME {
         no last.next
     }
     some first: TIME {
+        // time is linear
         all other: TIME {
             reachable[other, first, next] or other = first
         }
@@ -24,6 +25,7 @@ pred wellformedChain {
         no b: BlockX {
             b in first.blockchain.allBlocks
         }
+        // blockchain has no first/last block at the start
         no first.blockchain.lastBlock
     }
 }
