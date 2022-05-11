@@ -3,6 +3,15 @@
 // basic building blocks of a blockchain
 open "common.frg"
 
+// all coins must be present in Minted.coins
+// all coins must be spent or unspent
+pred wellformedCoins {
+    all c: Coin {
+        c in Minted.coins
+        c.spent = 1 or c.spent = 0
+    }
+}
+
 // Input is valid if all coins in Input.inputCoins are present in Minted and not spent
 pred validInput[input: Input] {
     #{c: Coin | c in input.inputCoins} >= 1
@@ -21,6 +30,24 @@ pred validOutput[output: Output] {
     }
 }
 
+// wellformed inputs are those that are valid
+// wellformed inputs are present in at most 1 transaction
+pred wellformedInputs {
+    all i: Input {
+        validInput[i]
+    }
+    all i: Input | all disj tx1, tx2 : Transaction | i in tx1.inputs => i not in tx2.inputs
+}
+
+// wellformed outputs are those that are valid
+// wellformed outputs are present in at most 1 transaction
+pred wellformedOutputs {
+    all o: Output {
+        validOutput[o]
+    }
+    all o: Output | all disj tx1, tx2 : Transaction | o in tx1.outputs => o not in tx2.outputs
+}
+
 // good transactions are ones where 
 // no other transaction on that block has the same inputs and/or outputs
 // there is at least one input and one output
@@ -32,31 +59,21 @@ pred goodTransaction[tx: Transaction, block: BlockX] {
     all i: tx.inputs | validInput[i]
     all o: tx.outputs | validOutput[o]
 }
-// a transaction should only be contained in one block 
-pred transactionOnlyInOneBlock {
-    all tx: Transaction | all disj b1, b2 : BlockX | tx in b1.blockTxs => tx not in b2.blockTxs
-}
+
 // if any of the above condiitons are violated, then it is a bad transaction
 pred badTransaction[tx: Transaction, block: BlockX] {
     not goodTransaction[tx, block]
 }
 
-pred wellformedInputs {
-    all i: Input {
-        validInput[i]
-    }
+// a transaction should only be contained in one block 
+pred transactionOnlyInOneBlock {
+    all tx: Transaction | all disj b1, b2 : BlockX | tx in b1.blockTxs => tx not in b2.blockTxs
 }
 
-pred wellformedOutputs {
-    all o: Output {
-        validOutput[o]
-    }
-}
-
-pred wellformedCoins {
-    all c: Coin {
-        c in Minted.coins
-        c.spent = 1 or c.spent = 0
+// every transaction must either be good or bad
+pred allTransactionsGoodOrBad {
+    all tx: Transaction, b: BlockX {
+        goodTransaction[tx, b] or badTransaction[tx, b]
     }
 }
 
@@ -64,8 +81,6 @@ pred wellformedTransactions {
     wellformedInputs
     wellformedOutputs
     wellformedCoins
-    all tx: Transaction, b: BlockX {
-        goodTransaction[tx, b] or badTransaction[tx, b]
-    }
+    allTransactionsGoodOrBad
     transactionOnlyInOneBlock
 }
