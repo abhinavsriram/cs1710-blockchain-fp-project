@@ -115,3 +115,10 @@ pred traces {
         }
     }
 }
+
+test expect {
+    // This should be sat but is not. Change value to test different amounts of TIME
+    tracesSat5 : {
+        traces
+    } for exactly 5 TIME for {next is linear} is sat
+}
