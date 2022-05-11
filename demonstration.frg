@@ -27,14 +27,14 @@ run {
     businessAsUsual
 } for exactly 3 TIME for { next is linear }
 
-// run {
-//     allHashesUnique
-//     wellformedBlocks
-//     wellformedMiners
-//     wellformedNetworks
-//     wellformedTransactions
-//     wellformedChain
-//     traces
-//     // we use a majority of bad miners from the same network to show a 51% attack on the blockchain
-//     majorityAttack
-// } for exactly 3 TIME for { next is linear }
+run {
+    allHashesUnique
+    wellformedBlocks
+    wellformedMiners
+    wellformedNetworks
+    wellformedTransactions
+    wellformedChain
+    traces
+    // we use a majority of bad miners from the same network to show a 51% attack on the blockchain
+    majorityAttack
+} for exactly 3 TIME for { next is linear }

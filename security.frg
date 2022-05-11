@@ -6,7 +6,7 @@ open "common.frg"
 pred majorityAttack {
     // there are more bad miners than good miners
     #{BadMiner} > #{GoodMiner}
-
+    // all the bad miners use the same bad network i.e., they all collude
     some attackNetwork: BadP2PNetwork | all otherNetwork: P2PNetwork {
         // bad miners part of attack network are greater than miners in every other network
         attackNetwork != otherNetwork => #{m: Miner | m.network = attackNetwork} > #{m: Miner | m.network = otherNetwork}
@@ -17,6 +17,9 @@ pred majorityAttack {
     }
 }
 
+// predicate that simply enforces that a majority attack is not taking place
+// this is a weaker constraint than even enforcing that #{GoodMiner} > #{BadMiner}
+// because we can still have #{BadMiner} > #{GoodMiner} but no attack
 pred businessAsUsual {
-    #{GoodMiner} > #{BadMiner}
+    not majorityAttack
 }

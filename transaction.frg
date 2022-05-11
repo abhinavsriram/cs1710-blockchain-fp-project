@@ -18,7 +18,7 @@ pred wellformedCoins {
 // Input is valid if all coins in Input.inputCoins are present in Minted and spent
 pred validInput[input: Input] {
     // there must be at least 1 coin present in an Input
-    #{c: Coin | c in input.inputCoins} > 1
+    #{c: Coin | c in input.inputCoins} >= 1
     // all coins in Input.inputCoins are present in Minted
     input.inputCoins in Minted.coins
     // all coins in Input.inputCoins are spent
@@ -30,7 +30,7 @@ pred validInput[input: Input] {
 // Output is valid if all coins in Output.outputCoins are present in Minted and not spent
 pred validOutput[output: Output] {
     // there must be at least 1 coin present in an Output
-    #{c: Coin | c in output.outputCoins} > 1
+    #{c: Coin | c in output.outputCoins} >= 1
     // all coins in Output.outputCoins are present in Minted
     output.outputCoins in Minted.coins
     // all coins in Output.outputCoins are unspent
@@ -62,8 +62,8 @@ pred goodTransaction[tx: Transaction, block: BlockX] {
     // no other transaction on that block has the same inputs and/or outputs
     all otherTx: block.blockTxs | otherTx != tx => (tx.inputs != otherTx.inputs and tx.outputs != otherTx.outputs)
     // there is at least one input and one output
-    #{i: Input | i in tx.inputs} > 1
-    #{o: Output | o in tx.outputs} > 1
+    #{i: Input | i in tx.inputs} >= 1
+    #{o: Output | o in tx.outputs} >= 1
     // these inputs and outputs are valid
     all i: tx.inputs | validInput[i]
     all o: tx.outputs | validOutput[o]
