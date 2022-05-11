@@ -503,4 +503,6 @@ function createStates() {
 }
 
 div.replaceChildren()
+div.style.overflow = "scroll"
+div.style.maxHeight = (window.innerHeight - 100) + "px"
 createStates()

@@ -22,6 +22,11 @@ pred allBlocksInAChain {
             blockInChain[b, bc]
         }
     }
+    // all blocks in a chain must have the same version
+    // right now we only have one chain so we set all block versions to be 1
+    all b: BlockX {
+        b.header.version = 1
+    }
 }
 
 // forces all blocks to contain a transaction
