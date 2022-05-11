@@ -15,10 +15,13 @@ pred wellformedCoins {
     all c: Coin | all i: Input, o: Output | c in i.inputCoins => c not in o.outputCoins
 }
 
-// Input is valid if all coins in Input.inputCoins are present in Minted and not spent
+// Input is valid if all coins in Input.inputCoins are present in Minted and spent
 pred validInput[input: Input] {
-    #{c: Coin | c in input.inputCoins} >= 1
+    // there must be at least 1 coin present in an Input
+    #{c: Coin | c in input.inputCoins} > 1
+    // all coins in Input.inputCoins are present in Minted
     input.inputCoins in Minted.coins
+    // all coins in Input.inputCoins are spent
     all c: input.inputCoins {
         c.spent = 1
     }
@@ -26,39 +29,42 @@ pred validInput[input: Input] {
 
 // Output is valid if all coins in Output.outputCoins are present in Minted and not spent
 pred validOutput[output: Output] {
-    #{c: Coin | c in output.outputCoins} >= 1
+    // there must be at least 1 coin present in an Output
+    #{c: Coin | c in output.outputCoins} > 1
+    // all coins in Output.outputCoins are present in Minted
     output.outputCoins in Minted.coins
+    // all coins in Output.outputCoins are unspent
     all c: output.outputCoins {
         c.spent = 0
     }
 }
 
-// wellformed inputs are those that are valid
-// wellformed inputs are present in at most 1 transaction
 pred wellformedInputs {
+    // wellformed inputs are those that are valid
     all i: Input {
         validInput[i]
     }
+    // wellformed inputs are present in at most 1 transaction
     all i: Input | all disj tx1, tx2 : Transaction | i in tx1.inputs => i not in tx2.inputs
 }
 
-// wellformed outputs are those that are valid
-// wellformed outputs are present in at most 1 transaction
 pred wellformedOutputs {
+    // wellformed outputs are those that are valid
     all o: Output {
         validOutput[o]
     }
+    // wellformed outputs are present in at most 1 transaction
     all o: Output | all disj tx1, tx2 : Transaction | o in tx1.outputs => o not in tx2.outputs
 }
 
 // good transactions are ones where 
-// no other transaction on that block has the same inputs and/or outputs
-// there is at least one input and one output
-// these inputs and outputs are valid
 pred goodTransaction[tx: Transaction, block: BlockX] {
+    // no other transaction on that block has the same inputs and/or outputs
     all otherTx: block.blockTxs | otherTx != tx => (tx.inputs != otherTx.inputs and tx.outputs != otherTx.outputs)
-    #{i: Input | i in tx.inputs} >= 1
-    #{o: Output | o in tx.outputs} >= 1
+    // there is at least one input and one output
+    #{i: Input | i in tx.inputs} > 1
+    #{o: Output | o in tx.outputs} > 1
+    // these inputs and outputs are valid
     all i: tx.inputs | validInput[i]
     all o: tx.outputs | validOutput[o]
 }
@@ -82,7 +88,7 @@ pred allTransactionsGoodOrBad {
 
 // all transactions must be in some network
 pred allTransactionsInSomeNetwork {
-    all tx: Transaction {
+    all tx: Transaction | {
         some n: P2PNetwork {
             tx in n.networkTxs
         }
@@ -90,9 +96,9 @@ pred allTransactionsInSomeNetwork {
 }
 
 pred wellformedTransactions {
+    wellformedCoins
     wellformedInputs
     wellformedOutputs
-    wellformedCoins
     allTransactionsGoodOrBad
     allTransactionsOnlyInOneBlock
     allTransactionsInSomeNetwork

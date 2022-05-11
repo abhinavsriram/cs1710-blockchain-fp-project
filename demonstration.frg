@@ -16,7 +16,7 @@ open "chainbuilder.frg"
 open "security.frg"
 
 run {
-    allHashesUnique
+    wellformedHashes
     wellformedBlocks
     wellformedMiners
     wellformedNetworks

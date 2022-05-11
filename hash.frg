@@ -42,3 +42,7 @@ pred allHashesUnique {
         }
     }
 }
+
+pred wellformedHashes {
+    allHashesUnique
+}

@@ -3,32 +3,49 @@
 open "common.frg"
 
 // defines behavior of a GoodMiner
-pred goodMiner[m: Miner] {
+pred goodMinerBehavior[m: Miner] {
     some gn: GoodP2PNetwork | m.network = gn
 }
 
 // defines behavior of a BadMiner
-pred badMiner[m: Miner] {
+pred badMinerBehavior[m: Miner] {
     some bn: BadP2PNetwork | m.network = bn
 }
 
-pred wellformedMiners {
-    // every miner must be a good miner or a bad miner
+// every miner must be a good miner or a bad miner
+pred allMinerGoodOrBad {
     all m: Miner {
-        goodMiner[m] or badMiner[m]
+        goodMinerBehavior[m] or badMinerBehavior[m]
     }
-    // all GoodMiners must exhibit behavior of a good miner
+}
+
+// all GoodMiners must exhibit behavior of a good miner
+pred goodMinerGoodBehavior {
     all gm: GoodMiner {
         gm in Miners.allMiners
-        goodMiner[gm]
-    }
-    // all BadMiners must exhibit behavior of a bad miner
+        goodMinerBehavior[gm]
+    } 
+}
+
+// all BadMiners must exhibit behavior of a bad miner
+pred badMinerBadBehavior {
     all bm: BadMiner {
         bm in Miners.allMiners
-        badMiner[bm]
+        badMinerBehavior[bm]
     }
-    // every miner must be present in Miners.allMiners
+}
+
+// every miner must be present in Miners.allMiners
+// potentially redundant
+pred everyMinerInAllMiners {
     all m: Miner {
         m in Miners.allMiners
     }
+}
+
+pred wellformedMiners {
+    allMinerGoodOrBad
+    goodMinerGoodBehavior
+    badMinerBadBehavior
+    everyMinerInAllMiners
 }

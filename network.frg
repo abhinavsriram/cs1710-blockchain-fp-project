@@ -3,6 +3,29 @@
 open "common.frg"
 open "transaction.frg"
 
+// good networks must only have good transactions
+pred goodNetworkGoodTransaction {
+    all tx: Transaction, b: BlockX, gn: GoodP2PNetwork {
+        tx in gn.networkTxs => goodTransaction[tx, b]
+    }
+}
+
+// bad networks can have good and/or bad transactions
+pred badNetworkBadTransaction {
+    all tx: Transaction, b: BlockX, bn: BadP2PNetwork {
+        tx in bn.networkTxs => goodTransaction[tx, b] or badTransaction[tx, b]
+    }
+}
+
+// all networks are either good or bad
+pred allNetworkGoodOrBad {
+    all n: P2PNetwork {
+        some gn: GoodP2PNetwork, bn: BadP2PNetwork {
+            n = gn or n = bn
+        }
+    }
+}
+
 // all networks must have at least 1 miner
 pred allNetworksHaveMiners {
     all n: P2PNetwork | {
@@ -30,34 +53,11 @@ pred allNetworksDoNotShareTransactions {
     }
 }
 
-// good networks must only have good transactions
-pred goodNetworkGoodTransaction {
-    all tx: Transaction, b: BlockX, gn: GoodP2PNetwork {
-        tx in gn.networkTxs => goodTransaction[tx, b]
-    }
-}
-
-// bad networks can have good and bad transactions
-pred badNetworkBadTransaction {
-    all tx: Transaction, b: BlockX, bn: BadP2PNetwork {
-        tx in bn.networkTxs => goodTransaction[tx, b] or badTransaction[tx, b]
-    }
-}
-
-// all networks are either good or bad
-pred allNetworkGoodOrBad {
-    all n: P2PNetwork {
-        some gn: GoodP2PNetwork, bn: BadP2PNetwork {
-            n = gn or n = bn
-        }
-    }
-}
-
 pred wellformedNetworks {
-    allNetworksHaveMiners
-    allNetworksHaveTransactions
-    allNetworksDoNotShareTransactions
     goodNetworkGoodTransaction
     badNetworkBadTransaction
     allNetworkGoodOrBad
+    allNetworksHaveMiners
+    allNetworksHaveTransactions
+    allNetworksDoNotShareTransactions
 }
