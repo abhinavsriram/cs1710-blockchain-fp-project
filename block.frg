@@ -21,8 +21,8 @@ pred allNoncesUnique {
     }
 }
 
+// check that the block is legally part of a blockchain
 pred blockPartOfChain[b: BlockX, bc: BlockChain] {
-    // check that the block is legally part of a blockchain i.e.,
     // check that it points to another block and another block points to it
     bc.lastBlock != b => {
         some next: BlockX {
