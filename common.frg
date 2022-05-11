@@ -59,60 +59,73 @@ sig NONCE {}
 sig HASH {}
 
 // abstract sig representing a miner
+// every miner receives its transactions from a peer to peer network
+// *constrained in miner.frg*
 abstract sig Miner {
     network: one P2PNetwork
 }
 
 // a good miner's network is a GoodP2PNetwork
+// *constrained in miner.frg*
 sig GoodMiner extends Miner {}
 
 // a bad miner's network is a BadP2PNetwork
+// *constrained in miner.frg*
 sig BadMiner extends Miner {}
 
 // set of all miners
+// *constrained in miner.frg*
 one sig Miners {
     allMiners: set Miner
 }
 
 // abstract sig representing a peer to peer network
 // the peer to peer network simply consists of a set of transactions
+// *constrained in network.frg*
 abstract sig P2PNetwork {
     networkTxs: set Transaction
 }
 
 // there is only one legitimate network
-// GoodP2PNetwork.transactions consists of only good transactions 
-// good transactions are defined by goodTransaction[tx, block]
+// GoodP2PNetwork.networkTxs consists of only good transactions 
+// *constrained in network.frg*
 one sig GoodP2PNetwork extends P2PNetwork {}
 
 // there can be multiple bad networks
-// BadP2PNetwork.transactions consists of good transactions and/or bad transactions
-// bad transactions are defined by badTransaction[tx, block]
+// BadP2PNetwork.networkTxs consists of good transactions and/or bad transactions
+// *constrained in network.frg*
 sig BadP2PNetwork extends P2PNetwork {}
 
 // set of all minted/mined coins i.e., set of all coins in our universe
+// *constrained in transaction.frg*
 one sig Minted {
     coins: set Coin
 }
 
 // each coin is either spent or unspent
 // spent is set to 1 if spent, 0 if unspent
+// *constrained in transaction.frg*
 sig Coin {
     spent: one Int 
 }
 
 // each transaction has a set of inputs and outputs
+// *constrained in transaction.frg*
 sig Transaction {
     inputs: set Input,
     outputs: set Output
 }
 
 // sig to represent inputs to a transaction
+// each input consists of a set of (spent) coins
+// *constrained in transaction.frg*
 sig Input {
     inputCoins: set Coin
 }
 
 // sig to represent outputs from a transaction
+// each output consists of a set of (unspent) coins
+// *constrained in transaction.frg*
 sig Output {
     outputCoins: set Coin
 }
