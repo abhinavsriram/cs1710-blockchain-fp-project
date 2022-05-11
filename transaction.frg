@@ -20,9 +20,9 @@ pred wellformedCoins {
 pred validInput[input: Input] {
     #{c: Coin | c in input.inputCoins} >= 1
     input.inputCoins in Minted.coins
-    all c: input.inputCoins {
-        c.spent = 0 
-    }
+    // all c: input.inputCoins {
+    //     c.spent = 0 
+    // }
 }
 
 // Output is valid if all coins in Output.outputCoins are present in Minted and not spent
