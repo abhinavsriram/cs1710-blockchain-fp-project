@@ -8,9 +8,9 @@ pred wellformedChain {
     all b1, b2: BlockX {
         b1.hash = b2.hash => b1 = b2
     }
-    // block is in allBlocks iff it is in the chain
+    // block is in allBlocks iff it is part of the chain
     all b: BlockX, bc: BlockChain {
-        b in bc.allBlocks iff blockInChain[b, bc]
+        b in bc.allBlocks iff blockPartOfChain[b, bc]
     }
     // time is linear
     some last: TIME {

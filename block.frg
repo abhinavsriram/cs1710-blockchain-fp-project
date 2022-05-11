@@ -21,22 +21,26 @@ pred allNoncesUnique {
     }
 }
 
+pred blockPartOfChain[b: BlockX, bc: BlockChain] {
+    // check that the block is legally part of a blockchain i.e.,
+    // check that it points to another block and another block points to it
+    bc.lastBlock != b => {
+        some next: BlockX {
+            next.header.prevBlockHash = b.hash
+            next in bc.allBlocks
+        } 
+    }
+    // also check that the block is in BlockChain.allBlocks
+    b in bc.allBlocks
+}
+
 // forces all blocks to be in a chain
 pred allBlocksInAChain {
     // checks that every block is part of some blockchain
     // currently only have one blockchain so all blocks must be in that chain
     all b: BlockX {
         some bc: BlockChain {
-            // check that the block is legally part of a blockchain i.e.,
-            // check that it points to another block and another block points to it
-            bc.lastBlock != b => {
-                some next: BlockX {
-                    next.header.prevBlockHash = b.hash
-                    next in bc.allBlocks
-                } 
-            }
-            // also check that the block is in BlockChain.allBlocks
-            b in bc.allBlocks
+            blockPartOfChain[b, bc]
         }
     }
     // all blocks in a chain must have the same version
