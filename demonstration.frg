@@ -17,6 +17,18 @@ open "security.frg"
 
 // generates a blockchain with 2 blocks being added over 3 timesteps
 // we use a majority of GoodMiners to show business-as-usual operations
+// small example
+// run {
+//     allHashesUnique
+//     wellformedBlocks
+//     wellformedMiners
+//     wellformedNetworks
+//     wellformedTransactions
+//     wellformedChain
+//     traces
+// } for exactly 3 TIME, exactly 1 GoodP2PNetwork, exactly 2 BadP2PNetwork, exactly 3 BadMiner, exactly 5 GoodMiner for { next is linear }
+
+// big example
 run {
     allHashesUnique
     wellformedBlocks
@@ -25,7 +37,7 @@ run {
     wellformedTransactions
     wellformedChain
     traces
-} for exactly 3 TIME, exactly 1 GoodP2PNetwork, exactly 2 BadP2PNetwork, exactly 3 BadMiner, exactly 5 GoodMiner for { next is linear }
+} for exactly 3 TIME, exactly 1 GoodP2PNetwork, exactly 3 BadP2PNetwork, exactly 6 BadMiner, exactly 7 GoodMiner for { next is linear }
 
 // shows a 51% attack on the blockchain
 // run {

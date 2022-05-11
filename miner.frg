@@ -17,12 +17,12 @@ pred wellformedMiners {
     all m: Miner {
         goodMiner[m] or badMiner[m]
     }
-    // all GoodMiner must exhibit behavior of a good miner
+    // all GoodMiners must exhibit behavior of a good miner
     all gm: GoodMiner {
         gm in Miners.allMiners
         goodMiner[gm]
     }
-    // all BadMiner must exhibit behavior of a bad miner
+    // all BadMiners must exhibit behavior of a bad miner
     all bm: BadMiner {
         bm in Miners.allMiners
         badMiner[bm]

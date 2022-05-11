@@ -7,9 +7,10 @@ pred majorityAttack[block: BlockX] {
     // there are more bad miners than good miners
     #{BadMiner} > #{GoodMiner}
 
-    some n1: BadP2PNetwork | all n2: P2PNetwork {
-        #{bm: BadMiner | bm.network = n1} > #{gm: GoodMiner | gm.network = n1}
-        n1 != n2 => #{m: Miner | m.network = n1} > #{m: Miner | m.network = n2}
-        all tx: block.blockTxs | tx in n1.networkTxs
+    some attackNetwork: BadP2PNetwork | all otherNetwork: P2PNetwork {
+        // bad miners part of attack network are greater than miners in every other network
+        attackNetwork != otherNetwork => #{m: Miner | m.network = attackNetwork} > #{m: Miner | m.network = otherNetwork}
+        // all the txs in any block are from the attack network
+        all tx: block.blockTxs | tx in attackNetwork.networkTxs
     }
 }
