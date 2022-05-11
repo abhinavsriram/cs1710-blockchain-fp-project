@@ -5,11 +5,15 @@ open "common.frg"
 
 // all coins must be present in Minted.coins
 // all coins must be spent or unspent
+// all coins must be present in only one input or one output
 pred wellformedCoins {
     all c: Coin {
         c in Minted.coins
         c.spent = 1 or c.spent = 0
     }
+    all c: Coin | all disj i1, i2: Input | c in i1.inputCoins => c not in i2.inputCoins
+    all c: Coin | all disj o1, o2: Output | c in o1.outputCoins => c not in o2.outputCoins
+    all c: Coin | all i: Input, o: Output | c in i.inputCoins => c not in o.outputCoins
 }
 
 // Input is valid if all coins in Input.inputCoins are present in Minted and not spent
