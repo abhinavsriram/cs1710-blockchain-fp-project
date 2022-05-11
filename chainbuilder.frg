@@ -24,6 +24,57 @@ pred step [b1, b2: BlockChain] {
     b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
 }
 
+// Step from empty blockchain with no blocks to blockchain with one block
+// Should be step[`BC0, `BC1] and no other combination, hence one b1, b2
+example canStepNoneToOne is {one b1, b2: BlockChain | step[b1, b2]} for {
+    BlockChain = `BC0 + `BC1
+    BlockX = `BX0
+    
+    lastBlock = `BC1 -> `BX0
+    allBlocks = `BC1 -> `BX0
+}
+
+// Not a valid step to go from a blockchain to itself
+example noStepSameBlockchain is not {some b1: BlockChain | step[b1, b1]} for {
+    BlockChain = `BC0
+    BlockX = `BX0
+
+    lastBlock = `BC0 -> `BX0
+    allBlocks = `BC0 -> `BX0
+}
+
+// Step from blockchain with blocks to blockchain with one more block
+// Should be step[`BC0, `BC1] and no other combination, hence one b1, b2
+example canStepSome is {one b1, b2: BlockChain | step[b1, b2]} for {
+    BlockChain = `BC0 + `BC1
+    BlockX = `BX0 + `BX1 + `BX2 + `BX3
+    
+    lastBlock = `BC0 -> `BX2 + `BC1 -> `BX3 
+    allBlocks = `BC0 -> `BX0 + `BC0 -> `BX1 + `BC0 -> `BX2 + 
+                `BC1 -> `BX0 + `BC1 -> `BX1 + `BC1 -> `BX2 + `BC1 -> `BX3
+}
+
+// Cannot step without changing lastBlock to brand new block not previously in chain
+example noStepWrongLast is not {some b1, b2: BlockChain | step[b1, b2]} for {
+    BlockChain = `BC0 + `BC1
+    BlockX = `BX0 + `BX1 + `BX2 + `BX3
+    
+    lastBlock = `BC0 -> `BX2 + `BC1 -> `BX0 
+    allBlocks = `BC0 -> `BX0 + `BC0 -> `BX1 + `BC0 -> `BX2 + 
+                `BC1 -> `BX0 + `BC1 -> `BX1 + `BC1 -> `BX2 + `BC1 -> `BX3
+}
+
+// Cannot step when previous blocks in chain have changed
+example noStepHistoryChanged is not {some b1, b2: BlockChain | step[b1, b2]} for {
+    BlockChain = `BC0 + `BC1
+    BlockX = `BX0 + `BX1 + `BX2 + `BX3 + 
+            `BX4 + `BX5 + `BX6
+    
+    lastBlock = `BC0 -> `BX2 + `BC1 -> `BX3 
+    allBlocks = `BC0 -> `BX0 + `BC0 -> `BX1 + `BC0 -> `BX2 + 
+                `BC1 -> `BX4 + `BC1 -> `BX5 + `BC1 -> `BX6 + `BC1 -> `BX3
+}
+
 // generates traces of a blockchain being built
 pred traces {
     all t1, t2: TIME {
