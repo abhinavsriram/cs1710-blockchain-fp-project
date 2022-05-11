@@ -30,7 +30,7 @@ pred blockPartOfChain[b: BlockX, bc: BlockChain] {
             next in bc.allBlocks
         } 
     }
-    // also check that the block is in BlockChain.allBlocks
+    // also checks that the block is in BlockChain.allBlocks
     b in bc.allBlocks
 }
 
@@ -45,15 +45,17 @@ pred allBlocksInAChain {
     }
     // all blocks in a chain must have the same version
     // currently only have one blockchain so we set all block versions to be 1
-    all b: BlockX {
-        b.header.version = 1
+    all bc: BlockChain {
+        all b: BlockX {
+            b in bc.allBlocks => b.header.version = 1
+        }
     }
 }
 
 // a block is added to the chain IFF a majority of miners vote for the block
 // a miner votes for the block when all txs in block are also in miner's network
 pred consensus[block: BlockX] {
-    #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= divide[#{m: Miner | m in Miners.allMiners}, 2]
+    #{m: Miner | m in Miners.allMiners and (block.blockTxs in m.network.networkTxs)} >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1]
 }
 
 // labels if block is approved or not and enumerates votes

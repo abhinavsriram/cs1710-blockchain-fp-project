@@ -1,7 +1,7 @@
 #lang forge
 
 // opening all files
-// opening all sig
+// opening all sigs
 open "common.frg"
 // basic building blocks of a blockchain
 open "hash.frg"

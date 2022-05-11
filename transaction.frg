@@ -1,16 +1,15 @@
 #lang forge
 
-// basic building blocks of a blockchain
 open "common.frg"
 
-// all coins must be present in Minted.coins
-// all coins must be spent or unspent
-// all coins must be present in only one input or one output
 pred wellformedCoins {
     all c: Coin {
+        // all coins must be present in Minted.coins
         c in Minted.coins
+        // all coins must be spent or unspent
         c.spent = 1 or c.spent = 0
     }
+    // all coins must be present in only one input or one output
     all c: Coin | all disj i1, i2: Input | c in i1.inputCoins => c not in i2.inputCoins
     all c: Coin | all disj o1, o2: Output | c in o1.outputCoins => c not in o2.outputCoins
     all c: Coin | all i: Input, o: Output | c in i.inputCoins => c not in o.outputCoins
@@ -20,9 +19,6 @@ pred wellformedCoins {
 pred validInput[input: Input] {
     #{c: Coin | c in input.inputCoins} >= 1
     input.inputCoins in Minted.coins
-    // all c: input.inputCoins {
-    //     c.spent = 0 
-    // }
 }
 
 // Output is valid if all coins in Output.outputCoins are present in Minted and not spent
