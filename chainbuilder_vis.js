@@ -240,6 +240,8 @@ function makeMiner(miner) {
         minerNameDiv.innerHTML = "Bad Miner " + miner.toString()[miner.toString().length - 1]
     } else if (miner.toString()[0] == "G" || miner.toString()[0] == "g") {
         minerNameDiv.innerHTML = "Good Miner " + miner.toString()[miner.toString().length - 1]
+    } else {
+        minerNameDiv.innerHTML = "Miner " + miner.toString()[miner.toString().length - 1]
     }
     newMiner.append(minerNameDiv)
     

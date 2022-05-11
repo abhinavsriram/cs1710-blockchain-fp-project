@@ -62,8 +62,8 @@ pred consensus[block: BlockX] {
 pred allBlocksObeyConsensus {
     all b: BlockX {
         // if a block reaches consensus, it is marked as approved, else not approved
-        consensus[b] => b.approved = 1
-        not consensus[b] => b.approved = 0
+        consensus[b] iff b.approved = 1
+        not consensus[b] iff b.approved = 0
         // set number of votes
         b.votes = #{m: Miner | m in Miners.allMiners and (b.blockTxs in m.network.networkTxs)}
     }

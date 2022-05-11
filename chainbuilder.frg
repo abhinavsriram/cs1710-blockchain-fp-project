@@ -20,10 +20,6 @@ pred step [b1, b2: BlockChain] {
     b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
     // the newly added block must have reached consensus
     consensus[b2.lastBlock]
-    // coins used in transactions as inputs are now spent
-    all tx: Transaction, i: Input, c: Coin {
-        tx in b2.lastBlock.blockTxs => {i in tx.inputs => {c in i.inputCoins => c.spent = 1}}
-    }
 }
 
 // generates traces

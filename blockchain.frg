@@ -7,7 +7,6 @@ pred wellformedChain {
     // all blocks in the blockchain must have reached consensus
     all b: BlockX, bc: BlockChain {
         b in bc.allBlocks => consensus[b]
-        b.votes >= add[divide[#{m: Miner | m in Miners.allMiners}, 2], 1]
     }
     // block is in allBlocks iff it is part of the chain
     all b: BlockX, bc: BlockChain {

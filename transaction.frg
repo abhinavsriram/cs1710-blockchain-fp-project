@@ -19,6 +19,9 @@ pred wellformedCoins {
 pred validInput[input: Input] {
     #{c: Coin | c in input.inputCoins} >= 1
     input.inputCoins in Minted.coins
+    all c: input.inputCoins {
+        c.spent = 1
+    }
 }
 
 // Output is valid if all coins in Output.outputCoins are present in Minted and not spent
@@ -66,7 +69,7 @@ pred badTransaction[tx: Transaction, block: BlockX] {
 }
 
 // a transaction should only be contained in one block 
-pred transactionOnlyInOneBlock {
+pred allTransactionsOnlyInOneBlock {
     all tx: Transaction | all disj b1, b2 : BlockX | tx in b1.blockTxs => tx not in b2.blockTxs
 }
 
@@ -77,10 +80,20 @@ pred allTransactionsGoodOrBad {
     }
 }
 
+// all transactions must be in some network
+pred allTransactionsInSomeNetwork {
+    all tx: Transaction {
+        some n: P2PNetwork {
+            tx in n.networkTxs
+        }
+    }
+}
+
 pred wellformedTransactions {
     wellformedInputs
     wellformedOutputs
     wellformedCoins
     allTransactionsGoodOrBad
-    transactionOnlyInOneBlock
+    allTransactionsOnlyInOneBlock
+    allTransactionsInSomeNetwork
 }
