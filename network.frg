@@ -54,7 +54,7 @@ pred allNetworksDoNotShareTransactions {
 pred wellformedNetworks {
     goodNetworkGoodTransaction
     badNetworkBadTransaction
-    allNetworkGoodOrBad
+    // allNetworkGoodOrBad
     allNetworksHaveMiners
     allNetworksHaveTransactions
     allNetworksDoNotShareTransactions
