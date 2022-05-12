@@ -34,3 +34,42 @@ pred wellformedChain {
     }
 }
 
+// A single starting time, where the chain starts with no blocks
+example wellformedOneTime is wellformedChain for {
+    BlockChain = `BC0
+    TIME = `T0
+    allBlocks = `BC0 -> none
+    lastBlock = `BC0 -> none
+}
+
+// A single starting time, where the chain has blocks somehow
+example malformedOneTime is not wellformedChain for {
+    BlockChain = `BC0
+    TIME = `T0
+    BlockX = `BX0
+
+    allBlocks = `BC0 -> `BX0
+    lastBlock = `BC0 -> `BX0
+}
+
+// Two times
+example wellformedTwoTime is wellformedChain for {
+    BlockChain = `BC0 + `BC1
+    TIME = `T0 + `T1
+    BlockX = `BX0
+
+    allBlocks = `BC0 -> none + `BC1 -> `BX0
+    lastBlock = `BC0 -> none + `BC1 -> `BX0
+    blockchain = `T0 -> `BC0 + `T1 -> `BC1
+}
+
+// Two times but allBlocks does not contain all blocks
+example malformedAllBlocks is not wellformedChain for {
+    BlockChain = `BC0 + `BC1
+    TIME = `T0 + `T1
+    BlockX = `BX0
+
+    allBlocks = `BC0 -> none + `BC1 -> none
+    lastBlock = `BC0 -> none + `BC1 -> `BX0
+    blockchain = `T0 -> `BC0 + `T1 -> `BC1
+}
