@@ -22,6 +22,10 @@ We have documented our modeling choices in detail using in-line comments in ever
 ### Did your goals change at all from your proposal? Did you realize anything you planned was unrealistic, or that anything you thought was unrealistic was doable?
 
 ## Understanding Instances and The Visualizer
+The visualizer is a core part of our project. Without the visualizer, understanding instances is virtually impossible. The visualizer is also quite extensive and detailed and works for any trace generated using the traces predicate in chainbuilder.frg. However, one thing to note is that since our visualizer is so extensive and has so many elements, it will not look as intended and will be hard to understand unless you zoom out to 50% (or less) on most screens. After zooming out (using CTRL/CMD -) you can pinch to zoom on your trackpad to get a better look. It should look like this:
+![alt text]()
+
+If you run the first run statement in demonstration.frg 
 
 ## Tests, Verification and Limitations
 
