@@ -18,7 +18,8 @@ pred majorityAttack {
 }
 
 // predicate that simply enforces that a majority attack is not taking place
-// this is a weaker constraint than even enforcing that #{GoodMiner} > #{BadMiner}
+// this is a stronger constraint than not having the constraint at all but
+// this is a weaker constraint than enforcing that #{GoodMiner} > #{BadMiner}
 // because we can still have #{BadMiner} > #{GoodMiner} but no attack
 pred businessAsUsual {
     not majorityAttack
