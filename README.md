@@ -44,4 +44,6 @@ Lastly, we get to transactions. Every Transaction has a field called inputs whic
 
 ## Tests, Verification and Limitations
 We have included some init tests for individual predicates in block.frg, blockchain.frg, hash.frg, chainbuilder.frg.
-During our implementation, we found that the default set size for Forge is 4. Without resetting the bounds, this limits our system to be only able to produce 3 timestamps and generate 2 blocks under default setting. 
+
+
+During our implementation, we found that the default set size for Forge is 4. Without resetting the bounds, this limits our system to be only able to produce 3 timestamps and generate 2 blocks under default setting. If we manually increase the bound to have more timestamps, we find that the consensus protocal would be violated. This issue has not been resolved as we assume there might still be some bugs in our code. We can only guarantee the default setting. 
