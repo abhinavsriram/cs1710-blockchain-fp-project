@@ -13,6 +13,25 @@ pred allBlocksUnique {
     }
 }
 
+example blocksSharedHash is not allBlocksUnique for {
+    BlockChain = `BC0
+    BlockX = `BX0 + `BX1
+    HASH = `H1 + `H2
+    hash = `BX0 -> `H1 + `BX1 -> `H1
+
+}
+example blockSharedHeader is not allBlocksUnique for {
+    BlockChain = `BC0
+    BlockX = `BX0 + `BX1
+    Header = `H1 + `H2
+    header = `BX0 -> `H1 + `BX1 -> `H1
+}
+example blocksSharedTx is not allBlocksUnique for {
+    BlockChain = `BC0
+    BlockX = `BX0 + `BX1
+    Transaction = `Tx1 + `Tx2
+    blockTxs =  `BX1 -> `Tx1
+}
 // forces all headers to not share a timestamp, nonce, prevBlockHash or merkleRootHash
 // headers can obviously have the same version or block size
 pred allHeadersUnique {
@@ -21,6 +40,29 @@ pred allHeadersUnique {
             h != oh => h.time != oh.time and h.nonce != oh.nonce and h.prevBlockHash != oh.prevBlockHash and h.merkleRootHash != oh.merkleRootHash
         }
     }
+}
+example headerSharedTimestamp is not allHeadersUnique for {
+    Header = `H1 + `H2 
+    TIME = `T1 + `T2 
+    time = `H1 -> `T1 + `H2  -> `T1 
+}
+
+example headerSharedNonce is not allHeadersUnique for {
+    Header = `H1 + `H2 
+    NONCE = `N1 + `N2
+    nonce = `H1 -> `N1 + `H2 -> `N1
+}
+
+example headerShareprevBlockHash is not allHeadersUnique for {
+    Header = `H1 + `H2 
+    HASH = `HS1 + `HS2
+    prevBlockHash = `H1 -> `HS1 + `H2 -> `HS1
+}
+
+example headerShareMerkleRootHash is not allHeadersUnique for {
+    Header = `H1 + `H2 
+    HASH = `HS1 + `HS2
+    merkleRootHash = `H1 -> `HS1 + `H2 -> `HS1
 }
 
 // check that the block is legally part of a blockchain
@@ -35,7 +77,6 @@ pred blockInAChainLegally[currBlock: BlockX, chain: BlockChain] {
     // also checks that the block is in BlockChain.allBlocks
     currBlock in chain.allBlocks
 }
-
 // forces all blocks to be in a chain
 pred allBlocksInAChain {
     // checks that every block is part of some blockchain
@@ -54,6 +95,11 @@ pred allBlocksInAChain {
     }
 }
 
+example notAllBlocksInChain is not allBlocksInAChain for {
+    BlockX = `BX1 + `BX2 
+    BlockChain = `BC1 + `BC2 + `BC3
+    allBlocks = `BC1 -> `BX1 + `BC2 -> `BX2
+}
 // a block is added to the chain IFF a majority of miners vote for the block
 // a miner votes for the block when all txs in block are also in miner's network
 pred consensus[block: BlockX] {
@@ -87,6 +133,11 @@ pred allBlocksHaveTransactions {
     }
 }
 
+example notAllBlocksHaveTx is not allBlocksHaveTransactions for {
+    BlockX = `BX1 + `BX2
+    Transaction = `Tx1 + `Tx2 
+    blockTxs = `BX1 -> `Tx1
+}
 pred wellformedBlocks {
     allBlocksUnique
     allHeadersUnique
