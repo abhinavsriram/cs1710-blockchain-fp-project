@@ -24,8 +24,8 @@ pred step [b1, b2: BlockChain] {
     b2.lastBlock.header.blocksize = #{tx: Transaction | tx in b2.lastBlock.blockTxs}
 }
 
-// Step from empty blockchain with no blocks to blockchain with one block
-// Should be step[`BC0, `BC1] and no other ordered combination, hence ONE b1, b2
+// step from empty blockchain with no blocks to blockchain with one block
+// should be step[`BC0, `BC1] and no other ordered combination, hence ONE b1, b2
 example canStepNoneToOne is {one b1, b2: BlockChain | step[b1, b2]} for {
     BlockChain = `BC0 + `BC1
     BlockX = `BX0
@@ -34,7 +34,7 @@ example canStepNoneToOne is {one b1, b2: BlockChain | step[b1, b2]} for {
     allBlocks = `BC1 -> `BX0
 }
 
-// Not a valid step to go from a blockchain to itself
+// sot a valid step to go from a blockchain to itself
 example noStepSameBlockchain is not {some b1: BlockChain | step[b1, b1]} for {
     BlockChain = `BC0
     BlockX = `BX0
@@ -43,8 +43,8 @@ example noStepSameBlockchain is not {some b1: BlockChain | step[b1, b1]} for {
     allBlocks = `BC0 -> `BX0
 }
 
-// Step from blockchain with blocks to blockchain with one more block
-// Should be step[`BC0, `BC1] and no other ordered combination, hence one b1, b2
+// step from blockchain with blocks to blockchain with one more block
+// should be step[`BC0, `BC1] and no other ordered combination, hence one b1, b2
 example canStepSome is {one b1, b2: BlockChain | step[b1, b2]} for {
     BlockChain = `BC0 + `BC1
     BlockX = `BX0 + `BX1 + `BX2 + `BX3
@@ -54,7 +54,7 @@ example canStepSome is {one b1, b2: BlockChain | step[b1, b2]} for {
                 `BC1 -> `BX0 + `BC1 -> `BX1 + `BC1 -> `BX2 + `BC1 -> `BX3
 }
 
-// Cannot step without changing lastBlock to brand new block not previously in chain
+// cannot step without changing lastBlock to brand new block not previously in chain
 example noStepWrongLast is not {some b1, b2: BlockChain | step[b1, b2]} for {
     BlockChain = `BC0 + `BC1
     BlockX = `BX0 + `BX1 + `BX2 + `BX3
@@ -64,8 +64,8 @@ example noStepWrongLast is not {some b1, b2: BlockChain | step[b1, b2]} for {
                 `BC1 -> `BX0 + `BC1 -> `BX1 + `BC1 -> `BX2 + `BC1 -> `BX3
 }
 
-// Can step[`BC0, `BC1] when prevBlockHash of `BC1's header is hash of `BC0's lastBlock
-// Cannot step any other ordered combination
+// can step[`BC0, `BC1] when prevBlockHash of `BC1's header is hash of `BC0's lastBlock
+// cannot step any other ordered combination
 example canStepWithHash is {one b1, b2: BlockChain | step[b1, b2]} for {
     BlockChain = `BC0 + `BC1
     BlockX = `BX2 + `BX3
@@ -80,7 +80,7 @@ example canStepWithHash is {one b1, b2: BlockChain | step[b1, b2]} for {
     prevBlockHash = `HEADER3 -> `HASH2
 }
 
-// Cannot step when new block's header's prevBlockHash is not the old lastBlock's hash
+// cannot step when new block's header's prevBlockHash is not the old lastBlock's hash
 example noStepWrongPrevHash is not {some b1, b2: BlockChain | step[b1, b2]} for {
     BlockChain = `BC0 + `BC1
     BlockX = `BX2 + `BX3
@@ -95,7 +95,7 @@ example noStepWrongPrevHash is not {some b1, b2: BlockChain | step[b1, b2]} for 
     prevBlockHash = `HEADER3 -> `HASH3
 }
 
-// Cannot step when previous blocks in chain have changed
+// cannot step when previous blocks in chain have changed
 example noStepHistoryChanged is not {some b1, b2: BlockChain | step[b1, b2]} for {
     BlockChain = `BC0 + `BC1
     BlockX = `BX0 + `BX1 + `BX2 + `BX3 + 
@@ -117,8 +117,8 @@ pred traces {
 }
 
 test expect {
-    // This should be sat but is not. Change value to test different amounts of TIME
-    tracesSat5 : {
+    // should be sat but is not, change value to test different amounts of TIME
+    tracesSat : {
         traces
-    } for exactly 5 TIME for {next is linear} is sat
+    } for exactly 5 TIME for { next is linear } is sat
 }
