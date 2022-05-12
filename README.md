@@ -22,13 +22,24 @@ We have documented our modeling choices in detail using in-line comments in ever
 ### Did your goals change at all from your proposal? Did you realize anything you planned was unrealistic, or that anything you thought was unrealistic was doable?
 
 ## Understanding Instances and The Visualizer
-The visualizer is a core part of our project. Without the visualizer, understanding instances is virtually impossible. The visualizer is also quite extensive and detailed and works for any trace generated using the traces predicate in chainbuilder.frg. However, one thing to note is that since our visualizer is so extensive and has so many elements, it will not look as intended and will be hard to understand unless you zoom out to 50% (or less) on most screens. After zooming out (using CTRL/CMD -) you can pinch to zoom on your trackpad to get a better look. It should look like this:
-
+The visualizer is a core part of our project. Without the visualizer, understanding instances is virtually impossible. The visualizer is also quite extensive and works for any trace generated using the predicates in chainbuilder.frg. However, one thing to note is that since our visualizer is so extensive and has so many elements, it will not look as intended and will be hard to understand unless you zoom out to 50% (or less) on most screens. After zooming out (using CTRL/CMD -) you can pinch to zoom on your trackpad to get a better look. Each state in the trace should look like this:
 
 ![alt text](https://raw.githubusercontent.com/abhinavsriram/cs1710-blockchain-fp-project/main/blockchain.png)
 
+If you run the first run statement in demonstration.frg, it will produce 3 timesteps showing a blockchain being built, above is an example from the last timestep of that run statement. 
 
-If you run the first run statement in demonstration.frg, it will produce 3 timesteps showing a blockchain being built
+#### The Blocks
+You will see that the blockchain consists of blocks (BlockX), "chained" together. Each block has a block header (Header), set of transactions (Transaction) and a block hash (HASH). The block header contains a version (which serves no purpose in our models, but could be helpful when modeling blockchains with hard forks like Ethereum), the time at which it was created, its NONCE, the block size, the previous block hash (which will be blank for the first block) and a merkle root hash (which again, serves no purpose in our models but could be useful for more advanced verification). The set of transactions is exactly what you expect and the block hash is unique to each block. 
+
+#### Consensus
+Each block in the above picture also has a box that says "Approved With 4 of 7 Votes". This box must always say "Approved" for any block on the blockchain. When a block says "Approved" it means miners have reached consensus on that block and have agreed to add it to the chain. If a block ever says "Not Approved" and is part of the chain then our model is broken. This box also shows how many votes the block recieved. In this case, the block received 4 votes out of a possible 7, all 4 votes are from good miners (desrcibed below). A block is added to the chain IFF a majority of miners vote for the block and a miner votes for the block when all the transactions in the block are also in the miner's network.
+
+#### The Peer to Peer (P2P) Networks and Miners
+In the above screenshot, there is one Good P2P Network and one Bad P2P Network. P2P Networks are either Good P2P Networks or Bad P2P Networks and there is only ever one Good P2P Network but there can be an arbitrary number of Bad P2P Networks.
+
+#### Transactions and Coins
+
+#### The Minted Coins
 
 ## Tests, Verification and Limitations
 
