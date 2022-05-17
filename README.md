@@ -13,9 +13,6 @@ At a very minimum, what we were aiming for, was to generate traces of the chain 
 ### How do you understand our Forge specification/code?
 We have documented our modeling choices in detail using in-line comments in every single file. common.frg covers the various sigs we have defined for our model, and next to each sig we mention the .frg file in which the sig is constrained. block.frg, blockchain.frg, hash.frg, miner.frg, network.frg, and transaction.frg constrain the various sigs we have defined and have a final wellformed predicate that encompasses every constraint on the respective sig. chainbuilder.frg describes traces of the chain building process, security.frg describes a 51% attack, and lastly, demonstration.frg has 2 run statements showing both the normal functioning of a blockchain as well as a 51% attack on a blockchain.
 
-## Video Demo (in 4K)
-https://youtu.be/CmvC4Uj-08M
-
 ## Abstraction Choices, Understanding Instances and The Visualizer
 
 The visualizer is a core part of our project. Without the visualizer, understanding instances is virtually impossible. The visualizer is also quite extensive and works for any trace generated using the predicates in chainbuilder.frg. However, one thing to note is that since our visualizer is so extensive and has so many elements, it will not look as intended and will be hard to understand unless you zoom out to 50% (or less) on most screens. After zooming out (using CTRL/CMD -) you can pinch to zoom on your trackpad to get a better look. Once each state in the trace looks like the example below (or the examples in the video demo), you have zoomed out sufficiently.
